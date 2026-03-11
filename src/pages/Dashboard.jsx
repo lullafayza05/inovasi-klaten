@@ -1,23 +1,20 @@
+import Header from "../components/Header";
+import Card from "../components/Card";
+
 function Dashboard() {
   return (
-    <div>
-      <h1>Dashboard</h1>
+    <div style={{ padding: "20px" }}>
+      <Header />
 
-      <div className="card-container">
-        <div className="card">
-          <h3>Total Inovasi</h3>
-          <h2>25</h2>
-        </div>
-
-        <div className="card">
-          <h3>Total OPD</h3>
-          <h2>12</h2>
-        </div>
-
-        <div className="card">
-          <h3>Total Inovator</h3>
-          <h2>40</h2>
-        </div>
+      <div style={{
+        display: "flex",
+        gap: "20px",
+        marginTop: "30px"
+      }}>
+        <Card title="Peta Indeks" />
+        <Card title="Data Indeks" />
+        <Card title="Pemenang IGA" />
+        <Card title="Tuxedovation" />
       </div>
     </div>
   );
