@@ -1,11 +1,46 @@
+import { useState } from "react";
+
 function Login() {
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.access) {
+        localStorage.setItem("token", data.access);
+        alert("Login berhasil");
+      } else {
+        alert("Username atau password salah");
+      }
+
+    } catch (error) {
+      console.log(error);
+      alert("Server error");
+    }
+  };
+
   return (
     <div
       style={{
         height: "100vh",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
+        alignItems: "flex-start",
+        paddingTop: "120px",
         background: "#f4f6f9"
       }}
     >
@@ -24,6 +59,7 @@ function Login() {
         <input
           type="text"
           placeholder="Username"
+          onChange={(e) => setUsername(e.target.value)}
           style={{
             width: "100%",
             padding: "10px",
@@ -36,6 +72,7 @@ function Login() {
         <input
           type="password"
           placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
           style={{
             width: "100%",
             padding: "10px",
@@ -46,6 +83,7 @@ function Login() {
         />
 
         <button
+          onClick={handleLogin}
           style={{
             width: "100%",
             padding: "10px",
@@ -59,6 +97,7 @@ function Login() {
         >
           Masuk
         </button>
+
       </div>
     </div>
   );

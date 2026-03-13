@@ -37,28 +37,32 @@ body{
 }
 
 .navbar{
-  background:#1e3a8a;
-  padding:10px 20px;
-  width:100%;
-  box-sizing:border-box;
-
   display:flex;
-  justify-content:center; 
-  gap:30px; 
+  gap:30px;
+  margin-left:auto;
 }
 .navbar a{
-  color:white;
   text-decoration:none;
-  font-weight:bold;
-  font-size:18px;     /* membesarkan tulisan */
-  letter-spacing:0.5px; /* sedikit merapikan jarak huruf */
+  color:black;
+  position:relative;
+  display:inline-block;
   padding:5px 10px;
 }
 
-.navbar a:hover{
-  text-decoration:underline;
+.navbar a::after{
+  content:"";
+  position:absolute;
+  width:0;
+  height:2px;
+  left:0;
+  bottom:-3px;
+  background-color:black;
+  transition:0.3s ease;
 }
 
+.navbar a:hover::after{
+  width:100%;
+}
 /* CONTENT */
 .content{
   padding:25px;
@@ -105,4 +109,49 @@ body{
 /* HOVER BARIS */
 .card tr:hover{
   background:#f8fafc;
+}
+/* LOGIN PAGE */
+.login-container{
+  height:100vh;
+  display:flex;
+  justify-content:center;   /* tengah horizontal */
+  align-items:flex-start;   /* mulai dari atas */
+  padding-top:120px;        /* jarak dari atas */
+}
+
+.login-box{
+  width:420px;
+  background:white;
+  padding:40px;
+  border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.login-box h1{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.login-box input{
+  width:100%;
+  padding:12px;
+  margin-bottom:15px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+
+.login-box button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#2f4675;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.login-box button:hover{
+  background:#1f3560;
 }

@@ -21,12 +21,12 @@ function Navbar() {
       </div>
 
       <ul style={{ display: "flex", gap: "25px", listStyle: "none" }}>
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/pengumuman">Pengumuman</Link></li>
-        <li><Link to="/pedoman">Pedoman Nilai Indeks</Link></li>
-        <li><Link to="/manual-book">Manual Book</Link></li>
-        <li><Link to="/galeri">Galeri</Link></li>
-        <li><Link to="/berita">Berita</Link></li>
+        <li><Link to="/" style={{ textDecoration: "none", color: "#333" }}>Home</Link></li>
+        <li><Link to="/pengumuman" style={{ textDecoration: "none", color: "#333" }}>Pengumuman</Link></li>
+        <li><Link to="/pedoman" style={{ textDecoration: "none", color: "#333" }}>Pedoman Nilai Indeks</Link></li>
+        <li><Link to="/manual-book" style={{ textDecoration: "none", color: "#333" }}>Manual Book</Link></li>
+        <li><Link to="/galeri" style={{ textDecoration: "none", color: "#333" }}>Galeri</Link></li>
+        <li><Link to="/berita" style={{ textDecoration: "none", color: "#333" }}>Berita</Link></li>
       </ul>
 
       <Link to="/login">

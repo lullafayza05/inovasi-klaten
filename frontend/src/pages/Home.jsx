@@ -10,12 +10,12 @@ function Home() {
     { icon: "🏅", title: "PEMENANG IGA", link: "/pemenang-iga" },
     { icon: "▶", title: "TUXEDOVATION", link: "/tuxedovation" },
     { icon: "💡", title: "PUJA INDAH", link: "/puja-indah" },
-    { icon: "🌐", title: "WEB BSKDN", link: "/web-bskdn" }
+    { icon: "🌐", title: "WEB ", link: "/web-bskdn" }
   ];
 
   return (
-    <div style={{ padding: "40px" }}>
-
+  <div style={{ padding: "40px", position: "relative" }}>
+   
       {/* HERO */}
       <div
         style={{

@@ -8,12 +8,12 @@ import ManualBook from "./pages/ManualBook";
 import Galeri from "./pages/Galeri";
 import Berita from "./pages/Berita";
 import Login from "./pages/Login";
-
+import Clock from "./components/Clock";
 function App() {
   return (
     <Router>
       <Navbar />
-
+        <Clock />
       <Routes>
 
         {/* Navbar Menu */}
@@ -31,7 +31,7 @@ function App() {
         <Route path="/pemenang-iga" element={<h1>Pemenang IGA</h1>} />
         <Route path="/tuxedovation" element={<h1>Tuxedovation</h1>} />
         <Route path="/puja-indah" element={<h1>Puja Indah</h1>} />
-        <Route path="/web-bskdn" element={<h1>Web BSKDN</h1>} />
+        <Route path="/web-inovasi" element={<h1>Web Inovasi</h1>} />
 
       </Routes>
     </Router>

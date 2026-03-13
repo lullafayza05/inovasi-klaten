@@ -16,7 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.http import HttpResponse
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+def home(request):
+    return HttpResponse("Backend Inovasi Klaten Running")
 
 urlpatterns = [
+    path('', home),
     path('admin/', admin.site.urls),
+    path('api/login/', TokenObtainPairView.as_view()),
+    path('api/refresh/', TokenRefreshView.as_view()),
 ]
