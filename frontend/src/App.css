@@ -155,3 +155,21 @@ body{
 .login-box button:hover{
   background:#1f3560;
 }
+.menu-link{
+  position:relative;
+}
+
+.menu-link::after{
+  content:"";
+  position:absolute;
+  width:0;
+  height:2px;
+  left:0;
+  bottom:-3px;
+  background:#1c3d6e;
+  transition:0.3s;
+}
+
+.menu-link:hover::after{
+  width:100%;
+}

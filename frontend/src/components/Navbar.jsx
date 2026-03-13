@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import logo from "../assets/logobaperda.png";
 function Navbar() {
   return (
     <nav
@@ -13,21 +13,53 @@ function Navbar() {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Logo_Kemendagri.png/120px-Logo_Kemendagri.png"
-          width="40"
-        />
-        <h3>Inovasi Klaten</h3>
-      </div>
+  <img
+    src={logo}  // atau link gambar
+    alt="logo"
+    style={{ width: "70px", height: "70px", objectFit: "contain" }}
+  />
 
-      <ul style={{ display: "flex", gap: "25px", listStyle: "none" }}>
-        <li><Link to="/" style={{ textDecoration: "none", color: "#333" }}>Home</Link></li>
-        <li><Link to="/pengumuman" style={{ textDecoration: "none", color: "#333" }}>Pengumuman</Link></li>
-        <li><Link to="/pedoman" style={{ textDecoration: "none", color: "#333" }}>Pedoman Nilai Indeks</Link></li>
-        <li><Link to="/manual-book" style={{ textDecoration: "none", color: "#333" }}>Manual Book</Link></li>
-        <li><Link to="/galeri" style={{ textDecoration: "none", color: "#333" }}>Galeri</Link></li>
-        <li><Link to="/berita" style={{ textDecoration: "none", color: "#333" }}>Berita</Link></li>
-      </ul>
+  <h3 style={{ margin: 0, whiteSpace: "nowrap" }}>
+    Rumah Inovasi Klaten
+  </h3>
+</div>
+
+      <ul
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "35px",
+    listStyle: "none",
+    margin: 0,
+    padding: 0
+  }}
+>
+
+
+  <li>
+  <Link to="/" className="menu-link">Home</Link>
+</li>
+
+<li>
+  <Link to="/pengumuman" className="menu-link">Pengumuman</Link>
+</li>
+
+<li>
+  <Link to="/pedoman" className="menu-link">Pedoman Nilai Indeks</Link>
+</li>
+
+<li>
+  <Link to="/manual-book" className="menu-link">Manual Book</Link>
+</li>
+
+<li>
+  <Link to="/galeri" className="menu-link">Galeri</Link>
+</li>
+
+<li>
+  <Link to="/berita" className="menu-link">Berita</Link>
+</li>
+</ul>
 
       <Link to="/login">
         <button

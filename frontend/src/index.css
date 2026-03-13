@@ -27,3 +27,16 @@ body {
   width:100%;
   min-height:100vh;
 }
+.menu-link{
+  text-decoration:none;
+  color:#000;
+  font-weight:600;
+  padding:6px 10px;
+  border-radius:5px;
+  transition:0.3s;
+}
+
+.menu-link:hover{
+  background:#e8eef9;
+  color:#1c3d6e;
+}
