@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework', 
     'inovasi',
+    'pengaduan'
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -83,9 +84,9 @@ DATABASES = {
  'default': {
   'ENGINE': 'django.db.backends.postgresql',
   'NAME': 'postgres',
-  'USER': 'postgres.flceoimexyksexuewsuv',
-  'PASSWORD': 'InovasiKlaten2026!',
-  'HOST': 'aws-1-ap-southeast-2.pooler.supabase.com',
+  'USER': 'postgres.ymwjnubawhrbpgupwrsx',
+  'PASSWORD': 'inovasiklaten123',
+  'HOST': 'aws-1-ap-northeast-1.pooler.supabase.com',
   'PORT': '5432',
  }
 }

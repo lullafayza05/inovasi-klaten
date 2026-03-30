@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import get_inovasi
+from .views import get_inovasi, create_inovasi
 
 urlpatterns = [
-    path('inovasi/', get_inovasi),
+    path('', get_inovasi),
+    path('create/', create_inovasi),
 ]
