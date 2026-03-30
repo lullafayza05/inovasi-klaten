@@ -13,14 +13,10 @@ function Navbar() {
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-  <img
-    src={logo}  // atau link gambar
-    alt="logo"
-    style={{ width: "70px", height: "70px", objectFit: "contain" }}
-  />
+  <div className="coin-logo">🪙</div>
 
   <h3 style={{ margin: 0, whiteSpace: "nowrap" }}>
-    Rumah Inovasi Klaten
+    KOIN Klaten
   </h3>
 </div>
 
