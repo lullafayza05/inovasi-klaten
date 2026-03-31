@@ -7,6 +7,7 @@ import Pedoman from "./pages/Pedoman";
 import ManualBook from "./pages/ManualBook";
 import Galeri from "./pages/Galeri";
 import Berita from "./pages/Berita";
+import Pengaduan from "./pages/pengaduan";
 import Login from "./pages/Login";
 import Clock from "./components/Clock";
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/manual-book" element={<ManualBook />} />
         <Route path="/galeri" element={<Galeri />} />
         <Route path="/berita" element={<Berita />} />
+        <Route path="/pengaduan" element={<Pengaduan />} />
         <Route path="/login" element={<Login />} />
 
         {/* Menu Lingkaran Home */}
