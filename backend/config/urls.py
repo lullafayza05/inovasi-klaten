@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/login/', TokenObtainPairView.as_view(), name='login'),
     path('api/inovasi/', include('inovasi.urls')),
     path('api/pengaduan/', include('pengaduan.urls')),
     path('', lambda request: HttpResponse("Backend API berjalan")),
