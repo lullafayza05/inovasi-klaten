@@ -9,10 +9,11 @@ import Galeri from "./pages/Galeri";
 import Berita from "./pages/Berita";
 import Pengaduan from "./pages/pengaduan";
 import Login from "./pages/Login";
+import DataInovasi from "./pages/DataInovasi";
 
-import Dashboard from "./pages/Dashboard";
-import TambahInovasi from "./pages/TambahInovasi";
-import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./Dashboard";
+import TambahInovasi from "./TambahInovasi";
+import ProtectedRoute from "./ProtectedRoute";
 
 import Clock from "./components/Clock";
 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/berita" element={<Berita />} />
         <Route path="/pengaduan" element={<Pengaduan />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/data-inovasi" element={<DataInovasi />} />
 
         {/* Admin */}
         <Route
@@ -44,10 +46,10 @@ function App() {
         />
 
         <Route
-          path="/tambah-inovasi"
+          path="/dashboard"
           element={
             <ProtectedRoute>
-              <TambahInovasi />
+              <Dashboard />
             </ProtectedRoute>
           }
         />
@@ -59,6 +61,7 @@ function App() {
         <Route path="/tuxedovation" element={<h1>Tuxedovation</h1>} />
         <Route path="/puja-indah" element={<h1>Puja Indah</h1>} />
         <Route path="/web-inovasi" element={<h1>Web Inovasi</h1>} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );

@@ -1,48 +1,61 @@
 import { useState } from "react";
+import axios from "axios";
 
 function TambahInovasi() {
   const [judul, setJudul] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
 
-  const handleSubmit = async () => {
-    const token = localStorage.getItem("token");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const response = await fetch(
-      "http://127.0.0.1:8000/api/inovasi/create/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+    const token = localStorage.getItem("access_token");
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/inovasi/create/",
+        {
+          judul: judul,
+          deskripsi: deskripsi,
         },
-        body: JSON.stringify({
-          judul,
-          deskripsi,
-        }),
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    const data = await response.json();
-    console.log(data);
-
-    alert("Data berhasil ditambahkan");
+      alert("Data berhasil ditambahkan");
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+      alert("Gagal kirim data");
+    }
   };
 
   return (
     <div>
-      <h2>Tambah Inovasi</h2>
+      <h1>Tambah Inovasi</h1>
 
-      <input
-        placeholder="Judul inovasi"
-        onChange={(e) => setJudul(e.target.value)}
-      />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Judul inovasi"
+          value={judul}
+          onChange={(e) => setJudul(e.target.value)}
+        />
 
-      <textarea
-        placeholder="Deskripsi"
-        onChange={(e) => setDeskripsi(e.target.value)}
-      />
+        <br /><br />
 
-      <button onClick={handleSubmit}>Simpan</button>
+        <textarea
+          placeholder="Deskripsi inovasi"
+          value={deskripsi}
+          onChange={(e) => setDeskripsi(e.target.value)}
+        />
+
+        <br /><br />
+
+        <button type="submit">Simpan</button>
+      </form>
     </div>
   );
 }

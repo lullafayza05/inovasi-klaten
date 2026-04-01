@@ -1,35 +1,35 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/login/", {
+      const response = await fetch("http://127.0.0.1:8000/api/token/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: username,
-          password: password
-        })
+          username,
+          password,
+        }),
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
       if (data.access) {
         localStorage.setItem("token", data.access);
-        alert("Login berhasil");
+        navigate("/dashboard");
       } else {
         alert("Username atau password salah");
       }
-
     } catch (error) {
-      console.log(error);
       alert("Server error");
+      console.error(error);
     }
   };
 
@@ -97,7 +97,6 @@ function Login() {
         >
           Masuk
         </button>
-
       </div>
     </div>
   );
