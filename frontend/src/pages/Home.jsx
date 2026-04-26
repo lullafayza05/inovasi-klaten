@@ -7,8 +7,8 @@ function Home() {
     { icon: "📍", title: "PETA INDEKS", link: "/peta" },
     { icon: "💡", title: "DATA INDEKS", link: "/data-indeks" },
     { icon: "🏅", title: "PEMENANG IGA", link: "/pemenang-iga" },
-    { icon: "▶", title: "TUXEDOVATION", link: "/tuxedovation" },
-    { icon: "💡", title: "PUJA INDAH", link: "/puja-indah" },
+    { icon: "▶", title: "DAFTAR MAGANG", link: "/daftar-magang" },
+    { icon: "💡", title: "DAFTAR LOMBA", link: "/daftar-lomba" },
     { icon: "🌐", title: "WEB ", link: "/web-bskdn" }
   ];
 

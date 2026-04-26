@@ -10,9 +10,9 @@ import Berita from "./pages/Berita";
 import Pengaduan from "./pages/pengaduan";
 import Login from "./pages/Login";
 import DataInovasi from "./pages/DataInovasi";
-
+import DaftarLomba from "./pages/DaftarLomba"; // pastikan path benar
+import DaftarMagang from "./pages/DaftarMagang"; 
 import Dashboard from "./Dashboard";
-import TambahInovasi from "./TambahInovasi";
 import ProtectedRoute from "./ProtectedRoute";
 
 import Clock from "./components/Clock";
@@ -24,7 +24,7 @@ function App() {
       <Clock />
 
       <Routes>
-        {/* Halaman Publik */}
+        {/* PUBLIK */}
         <Route path="/" element={<Home />} />
         <Route path="/pengumuman" element={<Pengumuman />} />
         <Route path="/pedoman" element={<Pedoman />} />
@@ -35,7 +35,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/data-inovasi" element={<DataInovasi />} />
 
-        {/* Admin */}
+        {/* ADMIN */}
         <Route
           path="/dashboard"
           element={
@@ -45,23 +45,13 @@ function App() {
           }
         />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Menu Lingkaran Home */}
+        {/* MENU HOME */}
         <Route path="/peta" element={<h1>Peta Indeks</h1>} />
         <Route path="/data-indeks" element={<h1>Data Indeks</h1>} />
         <Route path="/pemenang-iga" element={<h1>Pemenang IGA</h1>} />
-        <Route path="/tuxedovation" element={<h1>Tuxedovation</h1>} />
-        <Route path="/puja-indah" element={<h1>Puja Indah</h1>} />
+        <Route path="/daftar-magang" element={<DaftarMagang/>} />
+        <Route path="/daftar-lomba" element={<DaftarLomba />} />
         <Route path="/web-inovasi" element={<h1>Web Inovasi</h1>} />
-        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );
