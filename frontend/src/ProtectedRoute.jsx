@@ -2,9 +2,15 @@ import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
 
   if (!token) {
     return <Navigate to="/login" />;
+  }
+
+  // 🔥 hanya admin boleh masuk dashboard
+  if (role !== "admin") {
+    return <Navigate to="/" />;
   }
 
   return children;

@@ -13,32 +13,29 @@ function DaftarMagang() {
 
   const MAX_KUOTA = 5;
 
-  // LOAD DATA
+  const isLogin = !!localStorage.getItem("token");
+
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("magang");
-      const parsed = saved ? JSON.parse(saved) : [];
-      setData(Array.isArray(parsed) ? parsed : []);
-    } catch (error) {
-      console.log("LocalStorage error:", error);
-      setData([]);
-    }
+    const saved = JSON.parse(localStorage.getItem("magang")) || [];
+    setData(saved);
   }, []);
 
-  // SAVE HELPER
   const saveData = (newData) => {
     setData(newData);
     localStorage.setItem("magang", JSON.stringify(newData));
   };
 
-  // TAMBAH / EDIT
   const handleSubmit = () => {
+    if (!isLogin) {
+      alert("Harus login dulu!");
+      return;
+    }
+
     if (!form.nama || !form.email || !form.kampus || !form.posisi) {
       alert("Isi semua data!");
       return;
     }
 
-    // EDIT
     if (form.id) {
       const updated = data.map((item) =>
         item.id === form.id ? form : item
@@ -46,23 +43,19 @@ function DaftarMagang() {
       saveData(updated);
       alert("Data berhasil diupdate!");
     } else {
-      // CEK KUOTA hanya saat TAMBAH
       if (data.length >= MAX_KUOTA) {
-        alert("Kuota magang sudah PENUH!");
+        alert("Kuota penuh!");
         return;
       }
 
       const newItem = {
         id: Date.now(),
-        nama: form.nama,
-        email: form.email,
-        kampus: form.kampus,
-        posisi: form.posisi,
+        ...form,
         status: "Menunggu",
       };
 
       saveData([...data, newItem]);
-      alert("Pendaftaran berhasil!");
+      alert("Berhasil daftar!");
     }
 
     setForm({
@@ -74,15 +67,14 @@ function DaftarMagang() {
     });
   };
 
-  // EDIT
   const handleEdit = (item) => {
+    if (!isLogin) return alert("Login dulu!");
     setForm(item);
   };
 
-  // HAPUS
   const handleDelete = (id) => {
-    const filtered = data.filter((item) => item.id !== id);
-    saveData(filtered);
+    if (!isLogin) return alert("Login dulu!");
+    saveData(data.filter((item) => item.id !== id));
   };
 
   const isPenuh = data.length >= MAX_KUOTA;
@@ -96,72 +88,84 @@ function DaftarMagang() {
         {isPenuh && !form.id ? " (PENUH)" : ""}
       </h3>
 
-      {/* FORM */}
-      <input
-        placeholder="Nama Lengkap"
-        value={form.nama}
-        onChange={(e) =>
-          setForm({ ...form, nama: e.target.value })
-        }
-      />
-      <br /><br />
+      {!isLogin && (
+        <p style={{ color: "red" }}>
+          Login dulu untuk daftar / edit / hapus
+        </p>
+      )}
 
-      <input
-        placeholder="Email"
-        value={form.email}
-        onChange={(e) =>
-          setForm({ ...form, email: e.target.value })
-        }
-      />
-      <br /><br />
+      <div className="form-container">
+        <div className="form-card">
+          <input
+            className="form-input"
+            placeholder="Nama"
+            value={form.nama}
+            disabled={!isLogin}
+            onChange={(e) =>
+              setForm({ ...form, nama: e.target.value })
+            }
+          />
 
-      <input
-        placeholder="Asal Kampus"
-        value={form.kampus}
-        onChange={(e) =>
-          setForm({ ...form, kampus: e.target.value })
-        }
-      />
-      <br /><br />
+          <input
+            className="form-input"
+            placeholder="Email"
+            value={form.email}
+            disabled={!isLogin}
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
+          />
 
-      <input
-        placeholder="Posisi Magang"
-        value={form.posisi}
-        onChange={(e) =>
-          setForm({ ...form, posisi: e.target.value })
-        }
-      />
-      <br /><br />
+          <input
+            className="form-input"
+            placeholder="Kampus"
+            value={form.kampus}
+            disabled={!isLogin}
+            onChange={(e) =>
+              setForm({ ...form, kampus: e.target.value })
+            }
+          />
 
-      <button onClick={handleSubmit}>
-        {form.id ? "Update" : "Daftar"}
-      </button>
+          <input
+            className="form-input"
+            placeholder="Posisi"
+            value={form.posisi}
+            disabled={!isLogin}
+            onChange={(e) =>
+              setForm({ ...form, posisi: e.target.value })
+            }
+          />
 
-      {/* LIST */}
+          <button
+            className="form-button"
+            onClick={handleSubmit}
+            disabled={!isLogin}
+          >
+            {form.id ? "Update" : "Daftar"}
+          </button>
+        </div>
+      </div>
+
       <h3 style={{ marginTop: "30px" }}>Daftar Pendaftar</h3>
 
       {data.length === 0 ? (
-        <p>Belum ada pendaftar</p>
+        <p>Belum ada data</p>
       ) : (
         data.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              marginBottom: "10px",
-            }}
-          >
+          <div key={item.id} className="list-card">
             <b>{item.nama}</b> - {item.kampus} ({item.posisi})
 
             <div style={{ marginTop: "10px" }}>
-              <button onClick={() => handleEdit(item)}>
+              <button
+                className="btn-small btn-edit"
+                onClick={() => handleEdit(item)}
+              >
                 Edit
               </button>
 
               <button
+                className="btn-small btn-delete"
                 onClick={() => handleDelete(item.id)}
-                style={{ marginLeft: "10px" }}
               >
                 Hapus
               </button>

@@ -23,13 +23,31 @@ function Login() {
 
       if (data.access) {
         localStorage.setItem("token", data.access);
-        navigate("/dashboard");
+
+        const profileRes = await fetch(
+          "http://127.0.0.1:8000/api/inovasi/profile/",
+          {
+            headers: {
+              Authorization: `Bearer ${data.access}`,
+            },
+          }
+        );
+
+        const profile = await profileRes.json();
+
+        const role = profile.is_staff ? "admin" : "user";
+        localStorage.setItem("role", role);
+
+        if (role === "admin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+        }
       } else {
         alert("Username atau password salah");
       }
     } catch (error) {
       alert("Server error");
-      console.error(error);
     }
   };
 
@@ -39,9 +57,9 @@ function Login() {
         height: "100vh",
         display: "flex",
         justifyContent: "center",
-        alignItems: "flex-start",
-        paddingTop: "120px",
-        background: "#f4f6f9"
+        alignItems: "center",
+        background: "#f4f6f9",
+        flexDirection: "column",
       }}
     >
       <div
@@ -51,7 +69,7 @@ function Login() {
           borderRadius: "10px",
           boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
           width: "300px",
-          textAlign: "center"
+          textAlign: "center",
         }}
       >
         <h2>Login</h2>
@@ -65,7 +83,7 @@ function Login() {
             padding: "10px",
             marginTop: "15px",
             borderRadius: "5px",
-            border: "1px solid #ccc"
+            border: "1px solid #ccc",
           }}
         />
 
@@ -78,7 +96,7 @@ function Login() {
             padding: "10px",
             marginTop: "10px",
             borderRadius: "5px",
-            border: "1px solid #ccc"
+            border: "1px solid #ccc",
           }}
         />
 
@@ -92,12 +110,23 @@ function Login() {
             color: "white",
             border: "none",
             borderRadius: "5px",
-            cursor: "pointer"
+            cursor: "pointer",
           }}
         >
           Masuk
         </button>
       </div>
+
+      {/* 🔥 LINK REGISTER (INI YANG BENAR) */}
+      <p style={{ marginTop: "15px" }}>
+        Belum punya akun?{" "}
+        <span
+          onClick={() => navigate("/register")}
+          style={{ color: "blue", cursor: "pointer" }}
+        >
+          Daftar
+        </span>
+      </p>
     </div>
   );
 }

@@ -8,33 +8,31 @@ function DaftarLomba() {
   });
 
   const [data, setData] = useState([]);
+  const isLogin = !!localStorage.getItem("token"); // 🔥 cek login
 
-  // LOAD DATA
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("lomba")) || [];
     setData(saved);
   }, []);
 
-  // SIMPAN KE LOCALSTORAGE
   const saveData = (newData) => {
     setData(newData);
     localStorage.setItem("lomba", JSON.stringify(newData));
   };
 
-  // TAMBAH / UPDATE
   const handleSubmit = () => {
+    if (!isLogin) return alert("Harus login dulu!");
+
     if (!form.nama || !form.peserta)
       return alert("Isi semua data!");
 
     if (form.id) {
-      // EDIT
       const updated = data.map((item) =>
         item.id === form.id ? form : item
       );
       saveData(updated);
       alert("Data berhasil diupdate!");
     } else {
-      // TAMBAH
       const newItem = {
         id: Date.now(),
         nama: form.nama,
@@ -50,13 +48,13 @@ function DaftarLomba() {
     setForm({ id: null, nama: "", peserta: "" });
   };
 
-  // EDIT
   const handleEdit = (item) => {
+    if (!isLogin) return alert("Login dulu!");
     setForm(item);
   };
 
-  // HAPUS
   const handleDelete = (id) => {
+    if (!isLogin) return alert("Login dulu!");
     const filtered = data.filter((item) => item.id !== id);
     saveData(filtered);
   };
@@ -66,62 +64,64 @@ function DaftarLomba() {
       <h2>Pendaftaran Krenova</h2>
 
       {/* FORM */}
-      <input
-        placeholder="Nama Inovasi"
-        value={form.nama}
-        onChange={(e) =>
-          setForm({ ...form, nama: e.target.value })
-        }
-      />
+      <div className="form-container">
+        <div className="form-card">
+          {!isLogin && <p style={{color:"red"}}>Login dulu untuk daftar</p>}
 
-      <br /><br />
+          <input
+            className="form-input"
+            placeholder="Nama Inovasi"
+            value={form.nama}
+            disabled={!isLogin}
+            onChange={(e) =>
+              setForm({ ...form, nama: e.target.value })
+            }
+          />
 
-      <input
-        placeholder="Nama Peserta"
-        value={form.peserta}
-        onChange={(e) =>
-          setForm({ ...form, peserta: e.target.value })
-        }
-      />
+          <input
+            className="form-input"
+            placeholder="Nama Peserta"
+            value={form.peserta}
+            disabled={!isLogin}
+            onChange={(e) =>
+              setForm({ ...form, peserta: e.target.value })
+            }
+          />
 
-      <br /><br />
-
-      <button onClick={handleSubmit}>
-        {form.id ? "Update" : "Daftar"}
-      </button>
+          <button
+            className="form-button"
+            onClick={handleSubmit}
+            disabled={!isLogin}
+          >
+            {form.id ? "Update" : "Daftar"}
+          </button>
+        </div>
+      </div>
 
       {/* LIST */}
       <h3 style={{ marginTop: "30px" }}>Data Pendaftaran</h3>
 
-      {data.length === 0 ? (
-        <p>Belum ada pendaftar</p>
-      ) : (
-        data.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              marginBottom: "10px",
-            }}
-          >
-            <b>{item.nama}</b> - {item.peserta}
+      {data.map((item) => (
+        <div key={item.id} className="list-card">
+          <b>{item.nama}</b> - {item.peserta}
 
-            <div style={{ marginTop: "10px" }}>
-              <button onClick={() => handleEdit(item)}>
-                Edit
-              </button>
+          <div style={{ marginTop: "10px" }}>
+            <button
+              className="btn-small btn-edit"
+              onClick={() => handleEdit(item)}
+            >
+              Edit
+            </button>
 
-              <button
-                onClick={() => handleDelete(item.id)}
-                style={{ marginLeft: "10px" }}
-              >
-                Hapus
-              </button>
-            </div>
+            <button
+              className="btn-small btn-delete"
+              onClick={() => handleDelete(item.id)}
+            >
+              Hapus
+            </button>
           </div>
-        ))
-      )}
+        </div>
+      ))}
     </div>
   );
 }

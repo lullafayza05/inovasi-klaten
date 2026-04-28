@@ -173,3 +173,183 @@ body{
 .menu-link:hover::after{
   width:100%;
 }
+
+/* Container biar center tengah layar */
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh; /* biar ke tengah */
+}
+
+/* Kotak / Card */
+.register-card {
+  background: white;
+  padding: 30px;
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* Judul */
+.register-card h2 {
+  margin-bottom: 20px;
+}
+
+/* Input */
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Button */
+.btn-daftar {
+  width: 100%;
+  padding: 10px;
+  background-color: #1c3d6e; /* warna kuning mirip logo */
+  color: white; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-daftar:hover {
+  background-color: #1c3d6e;
+}
+
+/* FORM CONTAINER */
+.form-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.form-card {
+  background: white;
+  padding: 30px;
+  width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* INPUT */
+.form-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* BUTTON */
+.form-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: #1c3d6e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.form-button:hover {
+  background: #16325a;
+}
+
+/* CARD LIST */
+.list-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+.btn-small {
+  padding: 5px 10px;
+  border: none;
+  margin-right: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background: orange;
+  color: white;
+}
+
+.btn-delete {
+  background: red;
+  color: white;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.form-card {
+  background: white;
+  padding: 30px;
+  width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.form-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: #1c3d6e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.form-button:hover {
+  background: #16325a;
+}
+
+.list-card {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+
+.btn-small {
+  padding: 5px 10px;
+  border: none;
+  margin-right: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background: orange;
+  color: white;
+}
+
+.btn-delete {
+  background: red;
+  color: white;
+}

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
 import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home";
@@ -9,9 +10,10 @@ import Galeri from "./pages/Galeri";
 import Berita from "./pages/Berita";
 import Pengaduan from "./pages/pengaduan";
 import Login from "./pages/Login";
+import Register from "./pages/Register"; 
 import DataInovasi from "./pages/DataInovasi";
-import DaftarLomba from "./pages/DaftarLomba"; // pastikan path benar
-import DaftarMagang from "./pages/DaftarMagang"; 
+import DaftarLomba from "./pages/DaftarLomba";
+import DaftarMagang from "./pages/DaftarMagang";
 import Dashboard from "./Dashboard";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -33,6 +35,7 @@ function App() {
         <Route path="/berita" element={<Berita />} />
         <Route path="/pengaduan" element={<Pengaduan />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} /> {}
         <Route path="/data-inovasi" element={<DataInovasi />} />
 
         {/* ADMIN */}
@@ -49,7 +52,7 @@ function App() {
         <Route path="/peta" element={<h1>Peta Indeks</h1>} />
         <Route path="/data-indeks" element={<h1>Data Indeks</h1>} />
         <Route path="/pemenang-iga" element={<h1>Pemenang IGA</h1>} />
-        <Route path="/daftar-magang" element={<DaftarMagang/>} />
+        <Route path="/daftar-magang" element={<DaftarMagang />} />
         <Route path="/daftar-lomba" element={<DaftarLomba />} />
         <Route path="/web-inovasi" element={<h1>Web Inovasi</h1>} />
       </Routes>
