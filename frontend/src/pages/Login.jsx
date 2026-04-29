@@ -4,131 +4,130 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    if (!username || !password) {
+      alert("Username dan password wajib diisi!");
+      return;
+    }
+
     try {
       const response = await fetch("http://127.0.0.1:8000/api/token/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
       if (data.access) {
+        // simpan token
         localStorage.setItem("token", data.access);
 
-        const profileRes = await fetch(
-          "http://127.0.0.1:8000/api/inovasi/profile/",
-          {
-            headers: {
-              Authorization: `Bearer ${data.access}`,
-            },
-          }
-        );
-
-        const profile = await profileRes.json();
-
-        const role = profile.is_staff ? "admin" : "user";
-        localStorage.setItem("role", role);
-
-        if (role === "admin") {
-          navigate("/dashboard");
-        } else {
-          navigate("/");
-        }
+        // 🔥 redirect ke dashboard
+        navigate("/dashboard");
       } else {
-        alert("Username atau password salah");
+        alert("Login gagal");
       }
     } catch (error) {
-      alert("Server error");
+      console.error(error);
+      alert("Terjadi kesalahan server");
     }
   };
 
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f4f6f9",
-        flexDirection: "column",
-      }}
-    >
-      <div
-        style={{
-          background: "white",
-          padding: "40px",
-          borderRadius: "10px",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-          width: "300px",
-          textAlign: "center",
-        }}
-      >
+    <div style={container}>
+      <form onSubmit={handleLogin} style={formBox}>
         <h2>Login</h2>
 
         <input
           type="text"
           placeholder="Username"
+          value={username}
           onChange={(e) => setUsername(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "15px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
+          style={input}
         />
 
-        <input
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "10px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
-        />
+        <div style={passwordWrapper}>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={passwordInput}
+          />
 
-        <button
-          onClick={handleLogin}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "20px",
-            background: "#1c3d6e",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            style={eyeButton}
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </button>
+        </div>
+
+        <button type="submit" style={button}>
           Masuk
         </button>
-      </div>
-
-      {/* 🔥 LINK REGISTER (INI YANG BENAR) */}
-      <p style={{ marginTop: "15px" }}>
-        Belum punya akun?{" "}
-        <span
-          onClick={() => navigate("/register")}
-          style={{ color: "blue", cursor: "pointer" }}
-        >
-          Daftar
-        </span>
-      </p>
+      </form>
     </div>
   );
 }
+
+/* STYLE */
+const container = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100vh",
+  background: "#f1f5f9",
+};
+
+const formBox = {
+  width: "350px",
+  background: "white",
+  padding: "40px",
+  borderRadius: "15px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
+};
+
+const input = {
+  width: "100%",
+  padding: "14px",
+};
+
+const passwordWrapper = { position: "relative" };
+
+const passwordInput = {
+  width: "100%",
+  padding: "14px",
+  paddingRight: "40px",
+};
+
+const eyeButton = {
+  position: "absolute",
+  right: "10px",
+  top: "50%",
+  transform: "translateY(-50%)",
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+};
+
+const button = {
+  width: "100%",
+  padding: "14px",
+  background: "#2f4f7f",
+  color: "white",
+  border: "none",
+};
 
 export default Login;
