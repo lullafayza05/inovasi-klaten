@@ -3,68 +3,81 @@ import { useState } from "react";
 function Database() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("Semua");
-  const [openSidebar, setOpenSidebar] = useState(true);
 
   const data = [
-  {
-    pemda: "Klaten",
-    akun: "admin",
-    nama: "Smart",
-    inovasi: "Penerapan",
-    tahapan: "ASN",
-    inisiator: "ini",
-    koordinat: "-7.7,110.6",
-    urusan: "Pendidikan",
-    penerapan: "2024",
-    pengembangan: "2023",
-    skor: 80,
-    aksi: true,
-  },
-  {
-    pemda: "SKA",
-    akun: "admin",
-    nama: "Dodi",
-    inovasi: "Perancangan",
-    tahapan: "OPD",
-    inisiator: "itu",
-    koordinat: "-7.7,110.6",
-    urusan: "Kesehatan",
-    penerapan: "2025",
-    pengembangan: "2027",
-    skor: 70,
-    aksi: true,
-  },
-];
+    {
+      pemda: "Klaten",
+      akun: "admin",
+      nama: "Smart",
+      inovasi: "Penerapan",
+      tahapan: "ASN",
+      inisiator: "ini",
+      koordinat: "-7.7,110.6",
+      urusan: "Pendidikan",
+      penerapan: "2024",
+      pengembangan: "2023",
+      skor: 80,
+      aksi: true,
+    },
+    {
+      pemda: "SKA",
+      akun: "admin",
+      nama: "Dodi",
+      inovasi: "Perancangan",
+      tahapan: "OPD",
+      inisiator: "itu",
+      koordinat: "-7.7,110.6",
+      urusan: "Kesehatan",
+      penerapan: "2025",
+      pengembangan: "2027",
+      skor: 70,
+      aksi: true,
+    },
+  ];
 
   const filteredData = data.filter((item) => {
-  const keyword = search.toLowerCase();
+    const keyword = search.toLowerCase();
 
-  const matchSearch =
-    String(item.pemda || "").toLowerCase().includes(keyword) ||
-    String(item.akun || "").toLowerCase().includes(keyword) ||
-    String(item.nama || "").toLowerCase().includes(keyword) ||
-    String(item.inovasi || "").toLowerCase().includes(keyword) ||
-    String(item.tahapan || "").toLowerCase().includes(keyword) ||
-    String(item.inisiator || "").toLowerCase().includes(keyword) ||
-    String(item.koordinat || "").toLowerCase().includes(keyword) ||
-    String(item.urusan || "").toLowerCase().includes(keyword) ||
-    String(item.penerapan || "").toLowerCase().includes(keyword) ||
-    String(item.pengembangan || "").toLowerCase().includes(keyword) ||
-    String(item.skor || "").toLowerCase().includes(keyword) ||
-    String(item.aksi || "").toLowerCase().includes(keyword)
+    const matchSearch =
+      String(item.pemda || "").toLowerCase().includes(keyword) ||
+      String(item.akun || "").toLowerCase().includes(keyword) ||
+      String(item.nama || "").toLowerCase().includes(keyword) ||
+      String(item.inovasi || "").toLowerCase().includes(keyword) ||
+      String(item.tahapan || "").toLowerCase().includes(keyword) ||
+      String(item.inisiator || "").toLowerCase().includes(keyword) ||
+      String(item.koordinat || "").toLowerCase().includes(keyword) ||
+      String(item.urusan || "").toLowerCase().includes(keyword) ||
+      String(item.penerapan || "").toLowerCase().includes(keyword) ||
+      String(item.pengembangan || "").toLowerCase().includes(keyword) ||
+      String(item.skor || "").toLowerCase().includes(keyword) ||
+      String(item.aksi || "").toLowerCase().includes(keyword);
 
-  const matchStatus =
-    filterStatus === "Semua" || item.inovasi === filterStatus;
+    const matchStatus =
+      filterStatus === "Semua" || item.inovasi === filterStatus;
 
-  return matchSearch && matchStatus;
-});
+    return matchSearch && matchStatus;
+  });
 
   const handleDownload = () => {
     const csv = [
-      ["Pemda", "Akun", "Inovasi", "Tahapan", "Inisiator", "Koordinat", "Urusan", "Penerapan", "Pengembangan", "Skor", "Aksi"],
+      [
+        "Pemda",
+        "Akun",
+        "Nama",
+        "Inovasi",
+        "Tahapan",
+        "Inisiator",
+        "Koordinat",
+        "Urusan",
+        "Penerapan",
+        "Pengembangan",
+        "Skor",
+        "Aksi",
+      ],
       ...filteredData.map((d) => [
         d.pemda,
         d.akun,
+        d.nama,
         d.inovasi,
         d.tahapan,
         d.inisiator,
@@ -74,10 +87,9 @@ function Database() {
         d.pengembangan,
         d.skor,
         d.aksi,
-
       ]),
     ]
-      .map((e) => e.join(","))
+      .map((row) => row.join(","))
       .join("\n");
 
     const blob = new Blob([csv], { type: "text/csv" });
@@ -99,184 +111,146 @@ function Database() {
   ];
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
-      {/* MAIN */}
-      <div style={{ flex: 1, background: "#f4f6f9" }}>
+    <div style={{ background: "#f4f6f9" }}>
+      <div style={{ padding: "20px" }}>
+        <h2>Inovasi Daerah</h2>
+        <p style={{ color: "#777" }}>
+          Update: {new Date().toLocaleString()}
+        </p>
 
-        <div style={{ padding: "20px" }}>
-          
-          {/* HEADER */}
-          <h2>Inovasi Daerah</h2>
-          <p style={{ color: "#777" }}>
-            Update: {new Date().toLocaleString()}
-          </p>
+        {/* SEARCH */}
+        <div style={searchWrapper}>
+          <span style={icon}>🔍</span>
+          <input
+            placeholder="Cari data..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={searchInput}
+          />
+        </div>
 
-          {/* 🔥 SEARCH ATAS (OVAL) */}
-          <div style={searchWrapper}>
-            <span style={icon}>🔍</span>
-            <input
-              placeholder="Cari data..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={searchInput}
-            />
-          </div>
+        {/* STATS */}
+        <div style={grid}>
+          {stats.map((item, i) => (
+            <div key={i} style={card}>
+              <p>{item.title}</p>
+              <h1>{item.value}</h1>
+            </div>
+          ))}
+        </div>
 
-          {/* CARD */}
-          <div style={grid}>
-            {stats.map((item, i) => (
-              <div key={i} style={card}>
-                <p>{item.title}</p>
-                <h1>{item.value}</h1>
-              </div>
-            ))}
-          </div>
+        {/* DOWNLOAD */}
+        <h3 style={{ marginTop: "30px" }}>Unduh Data</h3>
+        <button style={downloadBtn} onClick={handleDownload}>
+          DOWNLOAD
+        </button>
 
-          {/* DOWNLOAD */}
-          <h3 style={{ marginTop: "30px" }}>Unduh Data</h3>
-          <button style={downloadBtn} onClick={handleDownload}>
-            DOWNLOAD
-          </button>
+        {/* TAB */}
+        <div style={tabContainer}>
+          {["Semua", "Inisiatif", "Uji Coba", "Penerapan"].map((item) => (
+            <button
+              key={item}
+              onClick={() => setFilterStatus(item)}
+              style={filterStatus === item ? activeTab : tab}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
 
-          {/* TAB */}
-          <div style={tabContainer}>
-            {["Semua", "Inisiatif", "Uji Coba", "Penerapan"].map((item) => (
-              <button
-                key={item}
-                onClick={() => setFilterStatus(item)}
-                style={filterStatus === item ? activeTab : tab}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-
-          {/* FILTER + TABLE */}
-          <div style={mainCard}>
-            
-            {/* HEADER + SEARCH KANAN (OVAL FIX) */}
-            <div style={filterHeader}>
-              <div>
-                <h3>Kabupaten Klaten</h3>
-                <p>bapperida IGA</p>
-              </div>
-
-              <div style={searchWrapper}>
-                <span style={icon}>🔍</span>
-                <input
-                  placeholder="pencarian"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={searchInput}
-                />
-              </div>
+        {/* MAIN CARD */}
+        <div style={mainCard}>
+          <div style={filterHeader}>
+            <div>
+              <h3>Kabupaten Klaten</h3>
+              <p>bapperida IGA</p>
             </div>
 
-            {/* FILTER */}
-            <div style={filterRow}>
-              <select style={input}>
-                <option>Bentuk Inovasi</option>
-                <option>Inovasi daerah lainnya sesuai dengan urusan pemerintahan yang menjadi kewenangan daerah</option>
-                <option>Inovasi pelayanan publik</option>
-                <option>inovasi tata kelola pemerintahan daerah</option>
-              </select> 
-
-              <select style={input}>
-                <option>Jenis Urusan</option>
-                <option>pendidikan</option>
-                <option>kesehatan</option>
-                <option>pekerjaan umum dan penataan ruang</option>
-                <option>perumahan rakyat dan kawasan permukiman</option>
-                <option>Ketentraman, ketertiban umum, dan perlindungan masyarakat</option>
-                <option>sosial</option>
-                <option>tenaga kerja</option>
-                <option>pemberdayaan perempuan dan perlindungan anak</option>
-                <option>pangan</option>
-                <option>pertanahan</option>
-                <option>lingkungan hidup</option>
-                <option>adminitrasi kependududkan dan pencatatan sipil</option>
-                <option>pemberdayaan masyarakat dan desa</option>
-                <option>pengendalian penduduk dan keluarga berencana</option>
-                <option>perhubungan</option>
-                <option>komunikasi dan informatika</option>
-                <option>koperasi, usaha kecil, dan menengah</option>
-                <option>penenaman modal</option>
-                <option>kepemudaan dan olahraga</option>
-                <option>statistik</option>
-                <option>persandian</option>
-                <option>kebudayaan</option>
-                <option>perpustakaan</option>
-                <option>kearsiapan</option>
-                <option>kelautan dan perikanan</option>  
-                <option>pariwisata</option>
-                <option>pertanian</option>
-                <option>kehutsnsn</option>
-                <option>energi dan sumber daya mineral</option>
-                <option>perdagangan</option>
-                <option>perindustrian</option>
-                <option>transmigrasi</option>
-                <option>perencanaan</option>
-                <option>keuangan</option>
-                <option>kepegawaian</option>
-                <option>penddidikan dan pelatihan</option>
-                <option>penelitian dan pengembangan</option>
-                <option>penunjang lainnya sesuai dengan ketentuan peraturan perundang-undangan</option>
-              </select>
-
-              <select style={input}>
-                <option>Inisiator</option>
-                <option>Kepala Daerah</option>
-                <option>Anggota DPRD</option>
-                <option>OPD</option>
-                <option>ASN</option>
-                <option>Masyarakat</option>
-              </select>
+            <div style={searchWrapper}>
+              <span style={icon}>🔍</span>
+              <input
+                placeholder="Pencarian"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                style={searchInput}
+              />
             </div>
+          </div>
 
-            {/* TABLE */}
-            <div style={{ overflowX: "auto" }}>
-              <table style={table}>
-                <thead>
+          {/* FILTER */}
+          <div style={filterRow}>
+            <select style={input}>
+              <option>Bentuk Inovasi</option>
+              <option>
+                Inovasi daerah lainnya sesuai dengan urusan pemerintahan
+              </option>
+              <option>Inovasi pelayanan publik</option>
+              <option>Inovasi tata kelola pemerintahan daerah</option>
+            </select>
+
+            <select style={input}>
+              <option>Jenis Urusan</option>
+              <option>Pendidikan</option>
+              <option>Kesehatan</option>
+              <option>Perhubungan</option>
+              <option>Komunikasi dan Informatika</option>
+              <option>Pariwisata</option>
+            </select>
+
+            <select style={input}>
+              <option>Inisiator</option>
+              <option>Kepala Daerah</option>
+              <option>Anggota DPRD</option>
+              <option>OPD</option>
+              <option>ASN</option>
+              <option>Masyarakat</option>
+            </select>
+          </div>
+
+          {/* TABLE */}
+          <div style={{ overflowX: "auto" }}>
+            <table style={table}>
+              <thead>
+                <tr>
+                  <th style={thStyle}>Nama Pemda</th>
+                  <th style={thStyle}>Nama Akun</th>
+                  <th style={thStyle}>Nama Inovasi</th>
+                  <th style={thStyle}>Tahapan Inovasi</th>
+                  <th style={thStyle}>Nama Inisiator</th>
+                  <th style={thStyle}>Koordinat</th>
+                  <th style={thStyle}>Urusan</th>
+                  <th style={thStyle}>Penerapan</th>
+                  <th style={thStyle}>Pengembangan</th>
+                  <th style={thStyle}>Skor</th>
+                  <th style={thStyle}>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.length === 0 ? (
                   <tr>
-                    <th>Nama Pemda</th>
-                    <th>Nama Akun</th>
-                    <th>Nama Inovasi</th>
-                    <th>Tahapan Inovasi</th>
-                    <th>Nama Inisiator</th>
-                    <th>Koordinat</th>
-                    <th>Urusan Pemerintahan Utama</th>
-                    <th>Waktu Penerapan Inovasi Daerah</th>
-                    <th>Waktu Pengembangan Inovasi Daerah</th>
-                    <th>Estimasi Skor Kematangan</th>
-                    <th>Aksi</th>
+                    <td style={tdStyle} colSpan="11">
+                      Data kosong
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredData.length === 0 ? (
-                    <tr>
-                      <td colSpan="5">Data kosong</td>
+                ) : (
+                  filteredData.map((item, i) => (
+                    <tr key={i}>
+                      <td style={tdStyle}>{item.pemda}</td>
+                      <td style={tdStyle}>{item.akun}</td>
+                      <td style={tdStyle}>{item.nama}</td>
+                      <td style={tdStyle}>{item.inovasi}</td>
+                      <td style={tdStyle}>{item.inisiator}</td>
+                      <td style={tdStyle}>{item.koordinat}</td>
+                      <td style={tdStyle}>{item.urusan}</td>
+                      <td style={tdStyle}>{item.penerapan}</td>
+                      <td style={tdStyle}>{item.pengembangan}</td>
+                      <td style={tdStyle}>{item.skor}</td>
+                      <td style={tdStyle}>{String(item.aksi)}</td>
                     </tr>
-                  ) : (
-                    filteredData.map((item, i) => (
-                      <tr key={i}>
-                        <td>{item.pemda}</td>
-                        <td>{item.akun}</td>
-                        <td>{item.inovasi}</td>
-                        <td>{item.tahapan}</td>
-                        <td>{item.inisiator}</td>
-                        <td>{item.koordinat}</td>
-                        <td>{item.urusan}</td>
-                        <td>{item.penerapan}</td>
-                        <td>{item.pengembangan}</td>
-                        <td>{item.skor}</td>
-                        <td>{item.aksi}</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -285,26 +259,6 @@ function Database() {
 }
 
 /* ================= STYLE ================= */
-
-const sidebar = {
-  width: "220px",
-  background: "#1e3a5f",
-  color: "white",
-};
-
-const menuItem = {
-  padding: "15px 20px",
-};
-
-const navbar = {
-  height: "60px",
-  background: "#0b2c5f",
-  color: "white",
-  display: "flex",
-  alignItems: "center",
-  gap: "20px",
-  padding: "0 20px",
-};
 
 const grid = {
   display: "grid",
@@ -324,6 +278,7 @@ const downloadBtn = {
   borderRadius: "20px",
   border: "1px solid blue",
   background: "white",
+  cursor: "pointer",
 };
 
 const tabContainer = {
@@ -333,14 +288,16 @@ const tabContainer = {
 };
 
 const tab = {
-  padding: "10px",
+  padding: "10px 15px",
   background: "#ddd",
   border: "none",
+  cursor: "pointer",
 };
 
 const activeTab = {
   ...tab,
-  background: "white",
+  background: "#0b2c5f",
+  color: "white",
 };
 
 const mainCard = {
@@ -367,14 +324,28 @@ const filterRow = {
 
 const input = {
   padding: "10px",
+  borderRadius: "8px",
+  border: "1px solid #ccc",
 };
 
 const table = {
   width: "100%",
   marginTop: "20px",
+  borderCollapse: "collapse",
 };
 
-/* 🔥 SEARCH OVAL FIX */
+const thStyle = {
+  borderBottom: "2px solid #ddd",
+  padding: "12px",
+  textAlign: "left",
+  background: "#f4f6f9",
+};
+
+const tdStyle = {
+  padding: "12px",
+  borderBottom: "1px solid #eee",
+};
+
 const searchWrapper = {
   display: "flex",
   alignItems: "center",
@@ -400,4 +371,3 @@ const searchInput = {
 };
 
 export default Database;
-
