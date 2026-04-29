@@ -4,36 +4,7 @@ function Database() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("Semua");
 
-  const data = [
-    {
-      pemda: "Klaten",
-      akun: "admin",
-      nama: "Smart",
-      inovasi: "Penerapan",
-      tahapan: "ASN",
-      inisiator: "ini",
-      koordinat: "-7.7,110.6",
-      urusan: "Pendidikan",
-      penerapan: "2024",
-      pengembangan: "2023",
-      skor: 80,
-      aksi: true,
-    },
-    {
-      pemda: "SKA",
-      akun: "admin",
-      nama: "Dodi",
-      inovasi: "Perancangan",
-      tahapan: "OPD",
-      inisiator: "itu",
-      koordinat: "-7.7,110.6",
-      urusan: "Kesehatan",
-      penerapan: "2025",
-      pengembangan: "2027",
-      skor: 70,
-      aksi: true,
-    },
-  ];
+  const data = [];
 
   const filteredData = data.filter((item) => {
     const keyword = search.toLowerCase();
@@ -102,12 +73,12 @@ function Database() {
   };
 
   const stats = [
-    { title: "Inovasi Dilaporkan", value: 257 },
-    { title: "Inovasi Dikirim", value: 221 },
-    { title: "Skor", value: 76 },
-    { title: "Inisiatif", value: 5 },
-    { title: "Uji Coba", value: 2 },
-    { title: "Penerapan", value: 250 },
+    { title: "Inovasi Dilaporkan", value: 0 },
+    { title: "Inovasi Dikirim", value: 0 },
+    { title: "Skor", value: 0 },
+    { title: "Inisiatif", value: 0 },
+    { title: "Uji Coba", value: 0 },
+    { title: "Penerapan", value: 0 },
   ];
 
   return (
