@@ -1,188 +1,142 @@
-/* ROOT supaya halaman full layar */
-#root{
-  width:100%;
-  min-height:100vh;
+*{
+  box-sizing: border-box;
 }
 
-/* BODY */
-body{
-  margin:0;
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background:#f1f5f9;
+  background: #f1f5f9;
 }
 
-/* HEADER */
-.header{
-  display:flex;
-  align-items:center;
-  gap:15px;
-  padding:15px 25px;
-  background:#ffffff;
-  border-bottom:3px solid #1e3a8a;
-  width:100%;
-  box-sizing:border-box;
+/* ================= HEADER ================= */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 25px;
+  background: #ffffff;
+  border-bottom: 3px solid #1e3a8a;
+  width: 100%;
 }
 
-.header img{
-  width:50px;
+.header img {
+  width: 50px;
 }
 
-.title h2{
-  margin:0;
+.title h2 {
+  margin: 0;
 }
 
-.title p{
-  margin:0;
-  color:#555;
+.title p {
+  margin: 0;
+  color: #555;
 }
 
-.navbar{
-  display:flex;
-  gap:30px;
-  margin-left:auto;
-}
-.navbar a{
-  text-decoration:none;
-  color:black;
-  position:relative;
-  display:inline-block;
-  padding:5px 10px;
+/* ================= NAVBAR ================= */
+.navbar {
+  display: flex;
+  gap: 30px;
+  margin-left: auto;
 }
 
-.navbar a::after{
-  content:"";
-  position:absolute;
-  width:0;
-  height:2px;
-  left:0;
-  bottom:-3px;
-  background-color:black;
-  transition:0.3s ease;
+.navbar a {
+  text-decoration: none;
+  color: black;
+  position: relative;
+  padding: 5px 10px;
 }
 
-.navbar a:hover::after{
-  width:100%;
-}
-/* CONTENT */
-.content{
-  padding:25px;
-  width:100%;
-  box-sizing:border-box;
-}
-
-/* CARD CONTAINER */
-.card-container{
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
+.navbar a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  left: 0;
+  bottom: -3px;
+  background-color: black;
+  transition: 0.3s ease;
 }
 
-/* CARD */
-.card{
-  background:white;
-  padding:20px;
-  border-radius:8px;
-  flex:1;
-  min-width:200px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+.navbar a:hover::after {
+  width: 100%;
 }
 
-/* TABEL DI DALAM CARD */
-.card table{
-  width:100%;
-  border-collapse:collapse;
+/* ================= CONTENT ================= */
+.content {
+  padding: 25px;
+  width: 100%;
 }
 
-/* HEADER TABEL */
-.card th{
-  background:#e2e8f0;
+/* ================= CARD ================= */
+.card-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-/* ISI TABEL */
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 200px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* ================= TABLE ================= */
+.card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.card th {
+  background: #e2e8f0;
+}
+
 .card th,
-.card td{
-  padding:10px;
-  border:1px solid #ddd;
-  text-align:left;
+.card td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
 }
 
-/* HOVER BARIS */
-.card tr:hover{
-  background:#f8fafc;
-}
-/* LOGIN PAGE */
-.login-container{
-  height:100vh;
-  display:flex;
-  justify-content:center;   /* tengah horizontal */
-  align-items:flex-start;   /* mulai dari atas */
-  padding-top:120px;        /* jarak dari atas */
+.card tr:hover {
+  background: #f8fafc;
 }
 
-.login-box{
-  width:420px;
-  background:white;
-  padding:40px;
-  border-radius:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+/* ================= MENU LINK ================= */
+.menu-link {
+  position: relative;
 }
 
-.login-box h1{
-  text-align:center;
-  margin-bottom:30px;
+.menu-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  left: 0;
+  bottom: -3px;
+  background: #1c3d6e;
+  transition: 0.3s;
 }
 
-.login-box input{
-  width:100%;
-  padding:12px;
-  margin-bottom:15px;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-size:16px;
+.menu-link:hover::after {
+  width: 100%;
 }
 
-.login-box button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#2f4675;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-}
-
-.login-box button:hover{
-  background:#1f3560;
-}
-.menu-link{
-  position:relative;
-}
-
-.menu-link::after{
-  content:"";
-  position:absolute;
-  width:0;
-  height:2px;
-  left:0;
-  bottom:-3px;
-  background:#1c3d6e;
-  transition:0.3s;
-}
-
-.menu-link:hover::after{
-  width:100%;
-}
-
-/* Container biar center tengah layar */
+/* ================= REGISTER ================= */
 .register-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh; /* biar ke tengah */
+  height: 80vh;
 }
 
-/* Kotak / Card */
 .register-card {
   background: white;
   padding: 30px;
@@ -192,12 +146,10 @@ body{
   text-align: center;
 }
 
-/* Judul */
 .register-card h2 {
   margin-bottom: 20px;
 }
 
-/* Input */
 .input-field {
   width: 100%;
   padding: 10px;
@@ -206,12 +158,11 @@ body{
   border-radius: 5px;
 }
 
-/* Button */
 .btn-daftar {
   width: 100%;
   padding: 10px;
-  background-color: #1c3d6e; /* warna kuning mirip logo */
-  color: white; 
+  background-color: #1c3d6e;
+  color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -219,77 +170,10 @@ body{
 }
 
 .btn-daftar:hover {
-  background-color: #1c3d6e;
+  background-color: #16325a;
 }
 
-/* FORM CONTAINER */
-.form-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 40px;
-}
-
-.form-card {
-  background: white;
-  padding: 30px;
-  width: 400px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-/* INPUT */
-.form-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-/* BUTTON */
-.form-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  background: #1c3d6e;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.form-button:hover {
-  background: #16325a;
-}
-
-/* CARD LIST */
-.list-card {
-  border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  background: #fff;
-}
-
-.btn-small {
-  padding: 5px 10px;
-  border: none;
-  margin-right: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn-edit {
-  background: orange;
-  color: white;
-}
-
-.btn-delete {
-  background: red;
-  color: white;
-}
-
+/* ================= FORM UMUM ================= */
 .form-container {
   display: flex;
   justify-content: center;
@@ -328,6 +212,7 @@ body{
   background: #16325a;
 }
 
+/* ================= LIST ================= */
 .list-card {
   border: 1px solid #ddd;
   padding: 15px;
