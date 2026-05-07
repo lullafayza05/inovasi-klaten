@@ -1,228 +1,798 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
-function Database() {
-  const [search, setSearch] = useState("");
-  const [filterStatus, setFilterStatus] = useState("Semua");
+function Database({
+  setDataInovasi,
+  dataInovasi,
+  setPage,
+}) {
+  /* ================= STATE ================= */
 
-  const data = [];
+  const [username] = useState("bapperidaiga");
+  const [formData, setFormData] = useState({
+  namaInovasi: "",
+  tahapan: "",
+  inisiator: "",
+  klasifikasi: "",
+  jenis: "",
+  bentuk: "",
+  astaCita: "",
+  urusan: "",
+  waktuUji: "",
+  waktuPenerapan: "",
+  perkembangan: "",
+});
+  const [namaInisiator, setNamaInisiator] =
+    useState("");
 
-  const filteredData = data.filter((item) => {
-    const keyword = search.toLowerCase();
+  const [koordinat, setKoordinat] =
+    useState("");
 
-    const matchSearch =
-      String(item.pemda || "").toLowerCase().includes(keyword) ||
-      String(item.akun || "").toLowerCase().includes(keyword) ||
-      String(item.nama || "").toLowerCase().includes(keyword) ||
-      String(item.inovasi || "").toLowerCase().includes(keyword) ||
-      String(item.tahapan || "").toLowerCase().includes(keyword) ||
-      String(item.inisiator || "").toLowerCase().includes(keyword) ||
-      String(item.koordinat || "").toLowerCase().includes(keyword) ||
-      String(item.urusan || "").toLowerCase().includes(keyword) ||
-      String(item.penerapan || "").toLowerCase().includes(keyword) ||
-      String(item.pengembangan || "").toLowerCase().includes(keyword) ||
-      String(item.skor || "").toLowerCase().includes(keyword) ||
-      String(item.aksi || "").toLowerCase().includes(keyword);
+  const [rancangBangun, setRancangBangun] =
+    useState("");
 
-    const matchStatus =
-      filterStatus === "Semua" || item.inovasi === filterStatus;
+  const [tujuanInovasi, setTujuanInovasi] =
+    useState("");
 
-    return matchSearch && matchStatus;
-  });
+  const [manfaat, setManfaat] = useState("");
 
-  const handleDownload = () => {
-    const csv = [
-      [
-        "Pemda",
-        "Akun",
-        "Nama",
-        "Inovasi",
-        "Tahapan",
-        "Inisiator",
-        "Koordinat",
-        "Urusan",
-        "Penerapan",
-        "Pengembangan",
-        "Skor",
-        "Aksi",
-      ],
-      ...filteredData.map((d) => [
-        d.pemda,
-        d.akun,
-        d.nama,
-        d.inovasi,
-        d.tahapan,
-        d.inisiator,
-        d.koordinat,
-        d.urusan,
-        d.penerapan,
-        d.pengembangan,
-        d.skor,
-        d.aksi,
-      ]),
-    ]
-      .map((row) => row.join(","))
-      .join("\n");
+  const [hasilInovasi, setHasilInovasi] =
+    useState("");
 
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
+  /* ================= QUILL ================= */
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "data_inovasi.csv";
-    a.click();
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link"],
+      ["clean"],
+    ],
   };
 
-  const stats = [
-    { title: "Inovasi Dilaporkan", value: 0 },
-    { title: "Inovasi Dikirim", value: 0 },
-    { title: "Skor", value: 0 },
-    { title: "Inisiatif", value: 0 },
-    { title: "Uji Coba", value: 0 },
-    { title: "Penerapan", value: 0 },
-  ];
+  /* ================= WORD COUNTER ================= */
+const countWords = (html) => {
+  if (!html) return 0;
 
+  const text = html
+    .replace(/<(.|\n)*?>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (text === "") return 0;
+
+  return text.split(" ").length;
+};
+
+const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+};
+
+const handleSubmit = () => {
+  if (
+    !formData.namaInovasi ||
+    !formData.tahapan ||
+    !formData.inisiator ||
+    !namaInisiator ||
+    !koordinat ||
+    !formData.klasifikasi ||
+    !formData.jenis ||
+    !formData.bentuk ||
+    !formData.astaCita ||
+    !formData.urusan ||
+    !formData.waktuUji ||
+    !formData.waktuPenerapan ||
+    !formData.perkembangan ||
+    countWords(rancangBangun) < 300 ||
+    !tujuanInovasi ||
+    !manfaat ||
+    !hasilInovasi
+  ) {
+    alert("Semua data wajib diisi!");
+    return;
+  }
+
+  const dataBaru = {
+    id: Date.now(),
+    namaInovasi: formData.namaInovasi,
+    namaAkun: username,
+    tahapan: formData.tahapan,
+    inisiator: formData.inisiator,
+    klasifikasi: formData.klasifikasi,
+    jenis: formData.jenis,
+    bentuk: formData.bentuk,
+    astaCita: formData.astaCita,
+    urusan: formData.urusan,
+    waktuUji: formData.waktuUji,
+    waktuPenerapan:
+      formData.waktuPenerapan,
+    perkembangan:
+      formData.perkembangan,
+    koordinat: koordinat,
+  };
+
+  setDataInovasi([
+    ...dataInovasi,
+    dataBaru,
+  ]);
+
+  alert("Data berhasil disimpan!");
+
+  setPage("listinovasi");
+};
   return (
-    <div style={{ background: "#f4f6f9" }}>
-      <div style={{ padding: "20px" }}>
-        <h2>Inovasi Daerah</h2>
-        <p style={{ color: "#777" }}>
-          Update: {new Date().toLocaleString()}
-        </p>
+    <div style={pageWrapper}>
+      <div style={container}>
+        {/* HEADER */}
+        <div style={headerBox}>
+          <h1 style={{ margin: 0 }}>
+            Inovasi Pemerintah Daerah
+          </h1>
 
-        {/* SEARCH */}
-        <div style={searchWrapper}>
-          <span style={icon}>🔍</span>
-          <input
-            placeholder="Cari data..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={searchInput}
-          />
+          <p
+            style={{
+              color: "#666",
+              marginTop: "8px",
+            }}
+          >
+            Dashboard | Inovasi Pemerintah
+            Daerah
+          </p>
         </div>
 
-        {/* STATS */}
-        <div style={grid}>
-          {stats.map((item, i) => (
-            <div key={i} style={card}>
-              <p>{item.title}</p>
-              <h1>{item.value}</h1>
+        {/* ALERT */}
+        <div style={alertBox}>
+          <b>Harap diperhatikan!</b>
+
+          <p style={{ marginTop: "8px" }}>
+            Lomba Inovasi Daerah ini
+            digunakan hanya untuk
+            penyelenggaraan Penilaian
+            inovasi di Tingkat Daerah
+            masing-masing.
+          </p>
+        </div>
+
+        {/* FORM */}
+        <div style={formCard}>
+          <h2 style={{ marginBottom: "30px" }}>
+            Tambah Inovasi Pemerintah
+            Daerah
+          </h2>
+
+          {/* NAMA PEMDA */}
+          <div style={formGroup}>
+            <label style={label}>
+              Nama Pemda
+            </label>
+
+            <p style={textView}>
+              Kabupaten Klaten
+            </p>
+          </div>
+
+          {/* NAMA INOVASI */}
+          <div style={formGroup}>
+            <label style={label}>
+              Nama Inovasi*
+            </label>
+
+            <input
+  type="text"
+  name="namaInovasi"
+  placeholder="Masukkan nama inovasi"
+  style={inputStyle}
+  value={formData.namaInovasi}
+  onChange={handleChange}
+/>
+          </div>
+
+          {/* NAMA AKUN */}
+          <div style={formGroup}>
+            <label style={label}>
+              Nama Akun
+            </label>
+
+            <p style={textView}>
+              {username}
+            </p>
+          </div>
+
+          {/* GRID */}
+          <div style={grid2}>
+            {/* TAHAPAN */}
+            <div style={formGroup}>
+              <label style={label}>
+                Tahapan Inovasi*
+              </label>
+<div style={radioGrid}>
+  <label style={radioCard}>
+    <input
+      type="radio"
+      name="tahapan"
+      value="Inisiatif"
+      onChange={handleChange}
+    />
+    Inisiatif
+  </label>
+
+  <label style={radioCard}>
+    <input
+      type="radio"
+      name="tahapan"
+      value="Uji Coba"
+      onChange={handleChange}
+    />
+    Uji Coba
+  </label>
+
+  <label style={radioCard}>
+    <input
+      type="radio"
+      name="tahapan"
+      value="Penerapan"
+      onChange={handleChange}
+    />
+    Penerapan
+  </label>
+</div>
             </div>
-          ))}
-        </div>
 
-        {/* DOWNLOAD */}
-        <h3 style={{ marginTop: "30px" }}>Unduh Data</h3>
-        <button style={downloadBtn} onClick={handleDownload}>
-          DOWNLOAD
-        </button>
+            {/* INISIATOR */}
+            <div style={formGroup}>
+              <label style={label}>
+                Inisiator Inovasi Daerah*
+              </label>
 
-        {/* TAB */}
-        <div style={tabContainer}>
-          {["Semua", "Inisiatif", "Uji Coba", "Penerapan"].map((item) => (
-            <button
-              key={item}
-              onClick={() => setFilterStatus(item)}
-              style={filterStatus === item ? activeTab : tab}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
+              <div style={radioGrid}>
+                <label style={radioCard}>
+  <input
+    type="radio"
+    name="inisiator"
+    value="Kepala Daerah"
+    onChange={handleChange}
+  />
+  Kepala Daerah
+</label>
 
-        {/* MAIN CARD */}
-        <div style={mainCard}>
-          <div style={filterHeader}>
-            <div>
-              <h3>Kabupaten Klaten</h3>
-              <p>bapperida IGA</p>
+                <label style={radioCard}>
+  <input
+    type="radio"
+    name="inisiator"
+    value="DPRD"
+    onChange={handleChange}
+  />
+  DPRD
+</label>
+
+               <label style={radioCard}>
+  <input
+    type="radio"
+    name="inisiator"
+    value="OPD"
+    onChange={handleChange}
+  />
+  OPD
+</label>
+
+                <label style={radioCard}>
+  <input
+    type="radio"
+    name="inisiator"
+    value="ASN"
+    onChange={handleChange}
+  />
+  ASN
+</label>
+
+
+                <label style={radioCard}>
+  <input
+    type="radio"
+    name="inisiator"
+    value="Masyarakat"
+    onChange={handleChange}
+  />
+  Masyarakat
+</label>
+              </div>
             </div>
+          </div>
 
-            <div style={searchWrapper}>
-              <span style={icon}>🔍</span>
+          {/* GRID */}
+          <div style={grid2}>
+            {/* NAMA INISIATOR */}
+            <div style={formGroup}>
+              <label style={label}>
+                Nama Inisiator*
+              </label>
+
               <input
-                placeholder="Pencarian"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                style={searchInput}
+                type="text"
+                placeholder="Masukkan nama inisiator"
+                value={namaInisiator}
+                onChange={(e) =>
+                  setNamaInisiator(
+                    e.target.value
+                  )
+                }
+                style={inputStyle}
+              />
+            </div>
+
+            {/* KOORDINAT */}
+            <div style={formGroup}>
+              <label style={label}>
+                Koordinat*
+              </label>
+
+              <input
+                type="text"
+                placeholder="-7.7056, 110.6061"
+                value={koordinat}
+                onChange={(e) =>
+                  setKoordinat(
+                    e.target.value
+                  )
+                }
+                style={inputStyle}
               />
             </div>
           </div>
 
-          {/* FILTER */}
-          <div style={filterRow}>
-            <select style={input}>
-              <option>Bentuk Inovasi</option>
+        {/* GRID */}
+<div style={grid2}>
+  {/* KLASIFIKASI */}
+  <div style={formGroup}>
+    <label style={label}>
+      Klasifikasi Inovasi*
+    </label>
+
+    <div style={radioGrid}>
+  <label style={radioCard}>
+    <input
+      type="radio"
+      name="klasifikasi"
+      value="Inovasi Perangkat Daerah"
+      onChange={handleChange}
+    />
+    Inovasi Perangkat Daerah
+  </label>
+
+  <label style={radioCard}>
+    <input
+      type="radio"
+      name="klasifikasi"
+      value="Inovasi Desa dan Kelurahan"
+      onChange={handleChange}
+    />
+    Inovasi Desa dan Kelurahan
+  </label>
+
+  <label style={radioCard}>
+    <input
+      type="radio"
+      name="klasifikasi"
+      value="Inovasi Masyarakat"
+      onChange={handleChange}
+    />
+    Inovasi Masyarakat
+  </label>
+</div>
+  </div>
+
+  {/* JENIS */}
+  <div style={formGroup}>
+    <label style={label}>
+      Jenis Inovasi*
+    </label>
+
+    <div style={radioGrid}>
+      <label style={radioCard}>
+        <input
+  type="radio"
+  name="jenis"
+  value="Digital"
+  onChange={handleChange}
+/>
+        Digital
+      </label>
+
+      <label style={radioCard}>
+        <input
+  type="radio"
+  name="jenis"
+  value="Non Digital"
+  onChange={handleChange}
+/>
+        Non Digital
+      </label>
+    </div>
+  </div>
+</div>
+
+{/* GRID */}
+<div style={grid2}>
+
+   {/* BENTUK INOVASI */}
+  <div style={formGroup}>
+    <label style={label}>
+      Bentuk Inovasi Daerah*
+    </label>
+
+   <select
+  name="bentuk"
+  value={formData.bentuk}
+  onChange={handleChange}
+  style={inputStyle}
+>
+                    <option>Silahkan Pilih</option>
+
               <option>
-                Inovasi daerah lainnya sesuai dengan urusan pemerintahan
+                Inovasi Daerah lainnya sesuai dengan Urusan Pemerintahan yang menjadi kewenangan Daerah
               </option>
-              <option>Inovasi pelayanan publik</option>
-              <option>Inovasi tata kelola pemerintahan daerah</option>
-            </select>
 
-            <select style={input}>
-              <option>Jenis Urusan</option>
-              <option>Pendidikan</option>
-              <option>Kesehatan</option>
-              <option>Perhubungan</option>
-              <option>Komunikasi dan Informatika</option>
-              <option>Pariwisata</option>
-            </select>
+              <option>
+                Inovasi Pelayanan Publik
+              </option>
 
-            <select style={input}>
-              <option>Inisiator</option>
-              <option>Kepala Daerah</option>
-              <option>Anggota DPRD</option>
-              <option>OPD</option>
-              <option>ASN</option>
-              <option>Masyarakat</option>
-            </select>
+              <option>
+                Inovasi Tata kelola pemerintahan daerah
+              </option>
+    </select>
+  </div>
+
+  {/* ASTA CITA */}
+  <div style={formGroup}>
+    <label style={label}>
+      Asta Cita*
+    </label>
+
+  <select
+  name="astaCita"
+  value={formData.astaCita}
+  onChange={handleChange}
+  style={inputStyle}
+>
+                   <option>Silahkan Pilih</option>
+
+              <option>Memperkokoh ideologi Pancasila, demokrasi, dan hak asasi manusia (HAM)</option>
+
+              <option>Memantapkan sistem pertahanan keamanan negara dan mendorong kemandirian bangsa melalui swasembada pangan, energi, air, ekonomi kreatif, ekonomi hijau, dan ekonomi biru</option>
+              
+              <option>Meningkatkan lapangan kerja yang berkualitas, mendorong kewirausahaan, mengembangkan industri kreatif, dan melanjutkan pengembangan infrastruktur</option>
+
+              <option>Memperkuat pembangunan sumber daya manusia (SDM) , sains teknologi, pendidikan, kesehatan , prestasi, olahraga, kesetaraan gender, serta penguatan perempuan, pemuda, dan penyandang disabilitas</option>
+
+              <option>Melanjutkan hilirisasi dan industrialisasi untuk meningkatkan nilai tambah di dalam negeri</option>
+            
+              <option>Membangun dari desa dan dari bawah untuk pemerataan ekonomi dan pemberantasan kemiskinan</option>
+
+              <option>Memperkuat reformasi politik, hukum, dan birokrasi derta memperkuat pencegahan dan pemberantasan korupsi dan narkoba</option>
+
+              <option>Memperkuat penyelarasab kehidupan yang harmonis dengan lingkungan alam, dan budaya serta peningkatan toleransi antarumat beragamauntuk mencapai masyarakat yang adil dan makmur</option>     
+    </select>
+  </div>
+
+  {/* URUSAN */}
+  <div style={formGroup}>
+    <label style={label}>
+      Urusan Pemerintahan
+    </label>
+
+    <select
+  name="urusan"
+  value={formData.urusan}
+  onChange={handleChange}
+  style={inputStyle}
+>
+      <option>
+        Pilih...
+      </option>
+
+                <option>pendidikan</option>
+                <option>kesehatan</option>
+                <option>pekerjaan umum dan penataan ruang</option>
+                <option>perumahan rakyat dan kawasan permukiman</option>
+                <option>Ketentraman, ketertiban umum, dan perlindungan masyarakat</option>
+                <option>sosial</option>
+                <option>tenaga kerja</option>
+                <option>pemberdayaan perempuan dan perlindungan anak</option>
+                <option>pangan</option>
+                <option>pertanahan</option>
+                <option>lingkungan hidup</option>
+                <option>adminitrasi kependududkan dan pencatatan sipil</option>
+                <option>pemberdayaan masyarakat dan desa</option>
+                <option>pengendalian penduduk dan keluarga berencana</option>
+                <option>perhubungan</option>
+                <option>komunikasi dan informatika</option>
+                <option>koperasi, usaha kecil, dan menengah</option>
+                <option>penenaman modal</option>
+                <option>kepemudaan dan olahraga</option>
+                <option>statistik</option>
+                <option>persandian</option>
+                <option>kebudayaan</option>
+                <option>perpustakaan</option>
+                <option>kearsiapan</option>
+                <option>kelautan dan perikanan</option>  
+                <option>pariwisata</option>
+                <option>pertanian</option>
+                <option>kehutsnsn</option>
+                <option>energi dan sumber daya mineral</option>
+                <option>perdagangan</option>
+                <option>perindustrian</option>
+                <option>transmigrasi</option>
+                <option>perencanaan</option>
+                <option>keuangan</option>
+                <option>kepegawaian</option>
+                <option>penddidikan dan pelatihan</option>
+                <option>penelitian dan pengembangan</option>
+                <option>penunjang lainnya sesuai dengan ketentuan peraturan perundang-undangan</option>
+
+    </select>
+  </div>
+</div>
+
+{/* GRID */}
+<div style={grid2}>
+  {/* UJI COBA */}
+  <div style={formGroup}>
+    <label style={label}>
+      Waktu Uji Coba Inovasi
+      Daerah*
+    </label>
+
+    <input
+  type="date"
+  name="waktuUji"
+  value={formData.waktuUji}
+  onChange={handleChange}
+  style={inputStyle}
+/>
+  </div>
+
+  {/* PENERAPAN */}
+<div style={formGroup}>
+  <label style={label}>
+    Waktu Penerapan Inovasi
+    Daerah*
+  </label>
+
+  <input
+    type="date"
+    name="waktuPenerapan"
+    value={formData.waktuPenerapan}
+    onChange={handleChange}
+    style={inputStyle}
+  />
+</div>
+</div>
+
+{/* PERKEMBANGAN */}
+<div style={formGroup}>
+  <label style={label}>
+    Apakah sudah ada
+    perkembangan inovasi
+    tersebut?
+  </label>
+
+  <div style={radioGrid}>
+  <label style={radioCard}>
+    <input
+      type="radio"
+      name="perkembangan"
+      value="Tidak"
+      onChange={handleChange}
+    />
+    Tidak
+  </label>
+
+  <label style={radioCard}>
+    <input
+      type="radio"
+      name="perkembangan"
+      value="Ya"
+      onChange={handleChange}
+    />
+    Ya
+  </label>
+</div>
+</div>
+
+
+          {/* RANCANG BANGUN */}
+          <div style={formGroup}>
+            <label style={label}>
+              Rancang Bangun (Minimal
+              300 kata)
+            </label>
+
+            <ReactQuill
+              theme="snow"
+              value={rancangBangun}
+              onChange={setRancangBangun}
+              modules={modules}
+              placeholder="Masukkan rancang bangun inovasi..."
+              style={quillStyle}
+            />
+
+            <div
+  style={{
+    ...wordCounter,
+    color:
+      countWords(rancangBangun) >= 300
+        ? "green"
+        : "red",
+  }}
+>
+  {countWords(rancangBangun)} / 300 kata
+</div>
           </div>
 
-          {/* TABLE */}
-          <div style={{ overflowX: "auto" }}>
-            <table style={table}>
-              <thead>
-                <tr>
-                  <th style={thStyle}>Nama Pemda</th>
-                  <th style={thStyle}>Nama Akun</th>
-                  <th style={thStyle}>Nama Inovasi</th>
-                  <th style={thStyle}>Tahapan Inovasi</th>
-                  <th style={thStyle}>Nama Inisiator</th>
-                  <th style={thStyle}>Koordinat</th>
-                  <th style={thStyle}>Urusan</th>
-                  <th style={thStyle}>Penerapan</th>
-                  <th style={thStyle}>Pengembangan</th>
-                  <th style={thStyle}>Skor</th>
-                  <th style={thStyle}>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length === 0 ? (
-                  <tr>
-                    <td style={tdStyle} colSpan="11">
-                      Data kosong
-                    </td>
-                  </tr>
-                ) : (
-                  filteredData.map((item, i) => (
-                    <tr key={i}>
-                      <td style={tdStyle}>{item.pemda}</td>
-                      <td style={tdStyle}>{item.akun}</td>
-                      <td style={tdStyle}>{item.nama}</td>
-                      <td style={tdStyle}>{item.inovasi}</td>
-                      <td style={tdStyle}>{item.inisiator}</td>
-                      <td style={tdStyle}>{item.koordinat}</td>
-                      <td style={tdStyle}>{item.urusan}</td>
-                      <td style={tdStyle}>{item.penerapan}</td>
-                      <td style={tdStyle}>{item.pengembangan}</td>
-                      <td style={tdStyle}>{item.skor}</td>
-                      <td style={tdStyle}>{String(item.aksi)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+          {/* TUJUAN */}
+          <div style={formGroup}>
+            <label style={label}>
+              Tujuan inovasi daerah
+            </label>
+
+            <ReactQuill
+              theme="snow"
+              value={tujuanInovasi}
+              onChange={setTujuanInovasi}
+              modules={modules}
+              placeholder="Masukkan tujuan inovasi..."
+              style={quillStyle}
+            />
+
+            <div style={wordCounter}>
+              {countWords(
+                tujuanInovasi
+              )}{" "}
+              words
+            </div>
           </div>
+
+          {/* MANFAAT */}
+          <div style={formGroup}>
+            <label style={label}>
+              Manfaat yang diperoleh
+            </label>
+
+            <ReactQuill
+              theme="snow"
+              value={manfaat}
+              onChange={setManfaat}
+              modules={modules}
+              placeholder="Masukkan manfaat..."
+              style={quillStyle}
+            />
+
+            <div style={wordCounter}>
+              {countWords(manfaat)} words
+            </div>
+          </div>
+
+          {/* HASIL */}
+          <div style={formGroup}>
+            <label style={label}>
+              Hasil Inovasi
+            </label>
+
+            <ReactQuill
+              theme="snow"
+              value={hasilInovasi}
+              onChange={setHasilInovasi}
+              modules={modules}
+              placeholder="Masukkan hasil inovasi..."
+              style={quillStyle}
+            />
+
+            <div style={wordCounter}>
+              {countWords(
+                hasilInovasi
+              )}{" "}
+              words
+            </div>
+          </div>
+
+          {/* FILE */}
+          <div style={grid2}>
+            <div style={uploadBox}>
+              <label style={label}>
+                Anggaran (Jika
+                diperlukan)
+              </label>
+
+              <input
+                type="file"
+                style={fileInput}
+              />
+
+              <p style={fileText}>
+                *) Dokumen PDF,
+                Maksimal 2MB
+              </p>
+            </div>
+
+            <div style={uploadBox}>
+              <label style={label}>
+                Profil Bisnis (.ppt)
+              </label>
+
+              <input
+                type="file"
+                style={fileInput}
+              />
+
+              <p style={fileText}>
+                *) Dokumen PDF,
+                Maksimal 2MB
+              </p>
+            </div>
+          </div>
+
+          <div style={grid2}>
+  {/* DOKUMEN HAKI */}
+  <div style={uploadBox}>
+    <label style={label}>
+      Dokumen HAKI
+    </label>
+
+    <input
+      type="file"
+      style={fileInput}
+    />
+
+    <p style={fileText}>
+      *) Dokumen PDF,
+      Maksimal 2MB
+    </p>
+  </div>
+
+  {/* PENGHARGAAN */}
+  <div style={uploadBox}>
+    <label style={label}>
+      Penghargaan
+    </label>
+
+    <input
+      type="file"
+      style={fileInput}
+    />
+
+    <p style={fileText}>
+      *) Dokumen PDF,
+      Maksimal 2MB
+    </p>
+  </div>
+</div>
+
+          {/* BUTTON */}
+         <button
+  onClick={handleSubmit}
+  style={{
+    ...submitBtn,
+    background:
+      countWords(rancangBangun) >= 300
+        ? "#0b2c5f"
+        : "#9ca3af",
+    cursor:
+      countWords(rancangBangun) >= 300
+        ? "pointer"
+        : "not-allowed",
+  }}
+  disabled={
+    countWords(rancangBangun) < 300
+  }
+>
+  Simpan Data
+</button>
         </div>
       </div>
     </div>
@@ -231,114 +801,128 @@ function Database() {
 
 /* ================= STYLE ================= */
 
-const grid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gap: "20px",
-  marginTop: "20px",
+const pageWrapper = {
+  background: "#f3f4f6",
+  minHeight: "100vh",
+  padding: "30px 0",
 };
 
-const card = {
-  background: "white",
+const container = {
+  width: "90%",
+  maxWidth: "1200px",
+  margin: "0 auto",
+};
+
+const headerBox = {
+  marginBottom: "20px",
+};
+
+const alertBox = {
+  background: "#f8b4b4",
   padding: "20px",
-  borderRadius: "15px",
+  borderRadius: "12px",
+  marginBottom: "25px",
 };
 
-const downloadBtn = {
-  padding: "10px 20px",
-  borderRadius: "20px",
-  border: "1px solid blue",
+const formCard = {
   background: "white",
-  cursor: "pointer",
+  padding: "35px",
+  borderRadius: "18px",
+  boxShadow:
+    "0 2px 10px rgba(0,0,0,0.08)",
 };
 
-const tabContainer = {
+const formGroup = {
   display: "flex",
+  flexDirection: "column",
   gap: "10px",
-  marginTop: "20px",
+  marginBottom: "30px",
 };
 
-const tab = {
-  padding: "10px 15px",
-  background: "#ddd",
-  border: "none",
+const grid2 = {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+  gap: "20px",
+  marginBottom: "20px",
+};
+
+const label = {
+  fontWeight: "600",
+  fontSize: "15px",
+};
+
+const textView = {
+  margin: 0,
+  fontSize: "16px",
+  color: "#111827",
+};
+
+const inputStyle = {
+  padding: "14px",
+  borderRadius: "10px",
+  border: "1px solid #d1d5db",
+  fontSize: "14px",
+  width: "100%",
+  outline: "none",
+};
+
+const quillStyle = {
+  background: "white",
+  borderRadius: "12px",
+};
+
+const wordCounter = {
+  textAlign: "right",
+  fontSize: "14px",
+  color: "#666",
+};
+
+const radioGrid = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "12px",
+};
+
+const radioCard = {
+  border: "1px solid #d1d5db",
+  padding: "14px 18px",
+  borderRadius: "10px",
+  display: "flex",
+  alignItems: "center",
+  gap: "10px",
   cursor: "pointer",
 };
 
-const activeTab = {
-  ...tab,
+const uploadBox = {
+  background: "#f5f5f5",
+  padding: "20px",
+  borderRadius: "10px",
+  display: "flex",
+  flexDirection: "column",
+  gap: "10px",
+};
+
+const fileInput = {
+  fontSize: "14px",
+};
+
+const fileText = {
+  margin: 0,
+  fontSize: "13px",
+  color: "#555",
+};
+
+const submitBtn = {
+  width: "100%",
+  padding: "16px",
+  border: "none",
+  borderRadius: "12px",
   background: "#0b2c5f",
   color: "white",
-};
-
-const mainCard = {
-  background: "white",
-  padding: "20px",
+  fontSize: "16px",
+  fontWeight: "bold",
+  cursor: "pointer",
   marginTop: "20px",
-  borderRadius: "10px",
-};
-
-const filterHeader = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: "20px",
-  flexWrap: "wrap",
-};
-
-const filterRow = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gap: "20px",
-  marginTop: "20px",
-};
-
-const input = {
-  padding: "10px",
-  borderRadius: "8px",
-  border: "1px solid #ccc",
-};
-
-const table = {
-  width: "100%",
-  marginTop: "20px",
-  borderCollapse: "collapse",
-};
-
-const thStyle = {
-  borderBottom: "2px solid #ddd",
-  padding: "12px",
-  textAlign: "left",
-  background: "#f4f6f9",
-};
-
-const tdStyle = {
-  padding: "12px",
-  borderBottom: "1px solid #eee",
-};
-
-const searchWrapper = {
-  display: "flex",
-  alignItems: "center",
-  background: "#f1f3f5",
-  borderRadius: "999px",
-  padding: "6px 12px",
-  width: "220px",
-  border: "1px solid #ddd",
-};
-
-const icon = {
-  fontSize: "12px",
-  marginRight: "6px",
-  color: "#888",
-};
-
-const searchInput = {
-  border: "none",
-  outline: "none",
-  background: "transparent",
-  fontSize: "13px",
-  width: "100%",
 };
 
 export default Database;

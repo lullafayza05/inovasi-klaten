@@ -1,208 +1,247 @@
 import { useState } from "react";
-import Lomba from "./Lomba";
-import Database from "./Database";
+function Dashboard({ data }) {
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("Semua");
 
-function Dashboard() {
-  const [openSidebar, setOpenSidebar] = useState(true);
-  const [page, setPage] = useState("dashboard");
+
+  const filteredData = data.filter((item) => {
+    const keyword = search.toLowerCase();
+
+    const matchSearch =
+      String(item.pemda || "").toLowerCase().includes(keyword) ||
+      String(item.akun || "").toLowerCase().includes(keyword) ||
+      String(item.nama || "").toLowerCase().includes(keyword) ||
+      String(item.inovasi || "").toLowerCase().includes(keyword) ||
+      String(item.tahapan || "").toLowerCase().includes(keyword) ||
+      String(item.inisiator || "").toLowerCase().includes(keyword) ||
+      String(item.koordinat || "").toLowerCase().includes(keyword) ||
+      String(item.urusan || "").toLowerCase().includes(keyword) ||
+      String(item.penerapan || "").toLowerCase().includes(keyword) ||
+      String(item.pengembangan || "").toLowerCase().includes(keyword) ||
+      String(item.skor || "").toLowerCase().includes(keyword) ||
+      String(item.aksi || "").toLowerCase().includes(keyword);
+
+    const matchStatus =
+      filterStatus === "Semua" || item.inovasi === filterStatus;
+
+    return matchSearch && matchStatus;
+  });
+
+  const handleDownload = () => {
+    const csv = [
+      [
+        "Pemda",
+        "Akun",
+        "Nama",
+        "Inovasi",
+        "Tahapan",
+        "Inisiator",
+        "Koordinat",
+        "Urusan",
+        "Penerapan",
+        "Pengembangan",
+        "Skor",
+        "Aksi",
+      ],
+      ...filteredData.map((d) => [
+        d.pemda,
+        d.akun,
+        d.nama,
+        d.inovasi,
+        d.tahapan,
+        d.inisiator,
+        d.koordinat,
+        d.urusan,
+        d.penerapan,
+        d.pengembangan,
+        d.skor,
+        d.aksi,
+      ]),
+    ]
+      .map((row) => row.join(","))
+      .join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "data_inovasi.csv";
+    a.click();
+  };
+
+  const stats = [
+    { title: "Inovasi Dilaporkan", value: 0 },
+    { title: "Inovasi Dikirim", value: 0 },
+    { title: "Skor", value: 0 },
+    { title: "Inisiatif", value: 0 },
+    { title: "Uji Coba", value: 0 },
+    { title: "Penerapan", value: 0 },
+  ];
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
-      {/* SIDEBAR */}
-      {openSidebar && (
-        <div style={sidebar}>
-          <h3 style={{ padding: "20px" }}>Bar Menu</h3>
+    <div style={{ background: "#f4f6f9" }}>
+      <div style={{ padding: "20px" }}>
+        <h2>Inovasi Daerah</h2>
+        <p style={{ color: "#777" }}>
+          Update: {new Date().toLocaleString()}
+        </p>
 
-          <div style={menuItem} onClick={() => setPage("dashboard")}>
-            Dashboard
-          </div>
-
-          <div style={menuItem} onClick={() => setPage("database")}>
-            Database Inovasi
-          </div>
-
-          <div style={menuItem} onClick={() => setPage("lomba")}>
-            Lomba Inovasi
-          </div>
-        </div>
-      )}
-
-      {/* MAIN CONTENT */}
-      <div style={{ flex: 1, background: "#f4f6f9" }}>
-        <div style={navbar}>
-          <span
-            onClick={() => setOpenSidebar(!openSidebar)}
-            style={{ cursor: "pointer", fontSize: "22px" }}
-          >
-            ☰
-          </span>
-          <h3>Dashboard Indeks Inovasi Daerah</h3>
+        {/* STATS */}
+        <div style={grid}>
+          {stats.map((item, i) => (
+            <div key={i} style={card}>
+              <p>{item.title}</p>
+              <h1>{item.value}</h1>
+            </div>
+          ))}
         </div>
 
-        <div style={{ padding: "20px" }}>
-          {/* DASHBOARD */}
-          {page === "dashboard" && (
-            <>
-              <h2>Tambah Inovasi Daerah</h2>
-              <p style={{ color: "#777" }}>
-                Tambahkan data inovasi daerah baru
-              </p>
+        {/* DOWNLOAD */}
+        <h3 style={{ marginTop: "30px" }}>Unduh Data</h3>
+        <button style={downloadBtn} onClick={handleDownload}>
+          DOWNLOAD
+        </button>
 
-              <div style={formCard}>
-                <div style={formGroup}>
-                  <label>Nama Pemda*</label>
-                  <input
-                    type="text"
-                    placeholder="Masukkan nama pemda"
-                    style={inputStyle}
-                  />
-                </div>
+        {/* TAB */}
+        <div style={tabContainer}>
+          {["Semua", "Inisiatif", "Uji Coba", "Penerapan"].map((item) => (
+            <button
+              key={item}
+              onClick={() => setFilterStatus(item)}
+              style={filterStatus === item ? activeTab : tab}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
 
-                <div style={formGroup}>
-                  <label>Nama Inovasi*</label>
-                  <input
-                    type="text"
-                    placeholder="Nama inovasi daerah"
-                    style={inputStyle}
-                  />
-                </div>
+        {/* MAIN CARD */}
+        <div style={mainCard}>
+          <div style={filterHeader}>
+            <div>
+              <h3>Kabupaten Klaten</h3>
+              <p>bapperida IGA</p>
+            </div>
 
-                <div style={formGroup}>
-                  <label>Tahapan Inovasi*</label>
-                  <div style={radioRow}>
-                    <label>
-                      <input type="radio" name="tahapan" /> Inisiatif
-                    </label>
-                    <label>
-                      <input type="radio" name="tahapan" /> Uji Coba
-                    </label>
-                    <label>
-                      <input type="radio" name="tahapan" /> Penerapan
-                    </label>
-                  </div>
-                </div>
+            <div style={searchWrapper}>
+              <span style={icon}>🔍</span>
+              <input
+                placeholder="Pencarian"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                style={searchInput}
+              />
+            </div>
+          </div>
 
-                <div style={formGroup}>
-                  <label>Inisiator Inovasi Daerah*</label>
-                  <div style={radioRow}>
-                    <label>
-                      <input type="radio" name="inisiator" /> Kepala Daerah
-                    </label>
-                    <label>
-                      <input type="radio" name="inisiator" /> Anggota DPRD
-                    </label>
-                    <label>
-                      <input type="radio" name="inisiator" /> OPD
-                    </label>
-                    <label>
-                      <input type="radio" name="inisiator" /> ASN
-                    </label>
-                    <label>
-                      <input type="radio" name="inisiator" /> Masyarakat
-                    </label>
-                  </div>
-                </div>
+          {/* FILTER */}
+          <div style={filterRow}>
+            <select style={input}>
+              <option>Bentuk Inovasi</option>
+              <option>Inovasi daerah lainnya sesuai dengan urusan pemerintahan yang menjadi kewenangan daerah</option>
+              <option>Inovasi pelayanan publik</option>
+              <option>inovasi tata kelola pemerintahan daerah</option>
+              </select> 
 
-                <div style={formGroup}>
-                  <label>Jenis Inovasi*</label>
-                  <div style={radioRow}>
-                    <label>
-                      <input type="radio" name="jenis" /> Digital
-                    </label>
-                    <label>
-                      <input type="radio" name="jenis" /> Non Digital
-                    </label>
-                  </div>
-                </div>
+            <select style={input}>
+                <option>Jenis Urusan</option>
+                <option>pendidikan</option>
+                <option>kesehatan</option>
+                <option>pekerjaan umum dan penataan ruang</option>
+                <option>perumahan rakyat dan kawasan permukiman</option>
+                <option>Ketentraman, ketertiban umum, dan perlindungan masyarakat</option>
+                <option>sosial</option>
+                <option>tenaga kerja</option>
+                <option>pemberdayaan perempuan dan perlindungan anak</option>
+                <option>pangan</option>
+                <option>pertanahan</option>
+                <option>lingkungan hidup</option>
+                <option>adminitrasi kependududkan dan pencatatan sipil</option>
+                <option>pemberdayaan masyarakat dan desa</option>
+                <option>pengendalian penduduk dan keluarga berencana</option>
+                <option>perhubungan</option>
+                <option>komunikasi dan informatika</option>
+                <option>koperasi, usaha kecil, dan menengah</option>
+                <option>penenaman modal</option>
+                <option>kepemudaan dan olahraga</option>
+                <option>statistik</option>
+                <option>persandian</option>
+                <option>kebudayaan</option>
+                <option>perpustakaan</option>
+                <option>kearsiapan</option>
+                <option>kelautan dan perikanan</option>  
+                <option>pariwisata</option>
+                <option>pertanian</option>
+                <option>kehutsnsn</option>
+                <option>energi dan sumber daya mineral</option>
+                <option>perdagangan</option>
+                <option>perindustrian</option>
+                <option>transmigrasi</option>
+                <option>perencanaan</option>
+                <option>keuangan</option>
+                <option>kepegawaian</option>
+                <option>penddidikan dan pelatihan</option>
+                <option>penelitian dan pengembangan</option>
+                <option>penunjang lainnya sesuai dengan ketentuan peraturan perundang-undangan</option>
+              </select>
 
-                <div style={formGroup}>
-                  <label>Bentuk Inovasi Daerah*</label>
-                  <select style={inputStyle}>
-                    <option>Pilih Bentuk Inovasi</option>
-                    <option>Inovasi Tata Kelola Pemerintahan Daerah</option>
-                    <option>Inovasi Pelayanan Publik</option>
-                    <option>Inovasi Daerah Lainnya</option>
-                  </select>
-                </div>
+            <select style={input}>
+              <option>Inisiator</option>
+                <option>Kepala Daerah</option>
+                <option>Anggota DPRD</option>
+                <option>OPD</option>
+                <option>ASN</option>
+                <option>Masyarakat</option>
+              </select>
 
-                <div style={formGroup}>
-                  <label>Tematik*</label>
-                  <select style={inputStyle}>
-                    <option>Pilih Tematik</option>
-                    <option>Kemudahan Investasi</option>
-                    <option>Penanggulangan Kemiskinan</option>
-                    <option>Digitalisasi Pelayanan</option>
-                  </select>
-                </div>
+          </div>
 
-                <div style={formGroup}>
-                  <label>Urusan Pemerintahan Utama*</label>
-                  <select style={inputStyle}>
-                    <option>Pilih Urusan</option>
-                    <option>Pendidikan</option>
-                    <option>Kesehatan</option>
-                    <option>Perhubungan</option>
-                    <option>Komunikasi dan Informatika</option>
-                  </select>
-                </div>
-
-                <div style={formGroup}>
-                  <label>Waktu Uji Coba Inovasi Daerah*</label>
-                  <input type="date" style={inputStyle} />
-                </div>
-
-                <div style={formGroup}>
-                  <label>Waktu Penerapan Inovasi Daerah*</label>
-                  <input type="date" style={inputStyle} />
-                </div>
-
-                <div style={formGroup}>
-                  <label>Rancang Bangun (Minimal 300 kata)*</label>
-                  <textarea
-                    rows="6"
-                    placeholder="Masukkan penjelasan rancang bangun inovasi..."
-                    style={textareaStyle}
-                  ></textarea>
-                </div>
-
-                <div style={formGroup}>
-                  <label>Tujuan Inovasi Daerah (Minimal 300 kata)</label>
-                  <textarea
-                    rows="6"
-                    placeholder="Masukkan tujuan inovasi daerah..."
-                    style={textareaStyle}
-                  ></textarea>
-                </div>
-
-                <div style={formGroup}>
-                  <label>Anggaran (Jika diperlukan)</label>
-                  <input type="file" style={fileInputStyle} />
-                </div>
-
-                <div style={formGroup}>
-                  <label>Profil Bisnis (.pdf)</label>
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    style={fileInputStyle}
-                  />
-                </div>
-
-                <div style={formGroup}>
-                  <label>Dokumen Pendukung</label>
-                  <input type="file" style={fileInputStyle} />
-                </div>
-
-                <button style={submitBtn}>Simpan Data</button>
-              </div>
-            </>
-          )}
-
-          {/* DATABASE */}
-          {page === "database" && <Database />}
-
-          {/* LOMBA */}
-          {page === "lomba" && <Lomba />}
+          {/* TABLE */}
+          <div style={{ overflowX: "auto" }}>
+            <table style={table}>
+              <thead>
+                <tr>
+                  <th style={thStyle}>Nama Pemda</th>
+                  <th style={thStyle}>Nama Akun</th>
+                  <th style={thStyle}>Nama Inovasi</th>
+                  <th style={thStyle}>Tahapan Inovasi</th>
+                  <th style={thStyle}>Nama Inisiator</th>
+                  <th style={thStyle}>Koordinat</th>
+                  <th style={thStyle}>Urusan</th>
+                  <th style={thStyle}>Penerapan</th>
+                  <th style={thStyle}>Pengembangan</th>
+                  <th style={thStyle}>Skor</th>
+                  <th style={thStyle}>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.length === 0 ? (
+                  <tr>
+                    <td style={tdStyle} colSpan="11">
+                      Data kosong
+                    </td>
+                  </tr>
+                ) : (
+                  filteredData.map((item, i) => (
+                    <tr key={i}>
+                      <td style={tdStyle}>{item.pemda}</td>
+                      <td style={tdStyle}>{item.akun}</td>
+                      <td style={tdStyle}>{item.nama}</td>
+                      <td style={tdStyle}>{item.inovasi}</td>
+                      <td style={tdStyle}>{item.inisiator}</td>
+                      <td style={tdStyle}>{item.koordinat}</td>
+                      <td style={tdStyle}>{item.urusan}</td>
+                      <td style={tdStyle}>{item.penerapan}</td>
+                      <td style={tdStyle}>{item.pengembangan}</td>
+                      <td style={tdStyle}>{item.skor}</td>
+                      <td style={tdStyle}>{String(item.aksi)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -211,87 +250,114 @@ function Dashboard() {
 
 /* ================= STYLE ================= */
 
-const sidebar = {
-  width: "220px",
-  background: "#1e3a5f",
-  color: "white",
+const grid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(3, 1fr)",
+  gap: "20px",
+  marginTop: "20px",
 };
 
-const menuItem = {
-  padding: "15px 20px",
+const card = {
+  background: "white",
+  padding: "20px",
+  borderRadius: "15px",
+};
+
+const downloadBtn = {
+  padding: "10px 20px",
+  borderRadius: "20px",
+  border: "1px solid blue",
+  background: "white",
   cursor: "pointer",
-  transition: "0.3s",
 };
 
-const navbar = {
-  height: "60px",
+const tabContainer = {
+  display: "flex",
+  gap: "10px",
+  marginTop: "20px",
+};
+
+const tab = {
+  padding: "10px 15px",
+  background: "#ddd",
+  border: "none",
+  cursor: "pointer",
+};
+
+const activeTab = {
+  ...tab,
   background: "#0b2c5f",
   color: "white",
+};
+
+const mainCard = {
+  background: "white",
+  padding: "20px",
+  marginTop: "20px",
+  borderRadius: "10px",
+};
+
+const filterHeader = {
   display: "flex",
+  justifyContent: "space-between",
   alignItems: "center",
   gap: "20px",
-  padding: "0 20px",
-};
-
-const formCard = {
-  background: "white",
-  padding: "30px",
-  borderRadius: "15px",
-  marginTop: "20px",
-  boxShadow: "0 4px 10px rgba(0,0,0,0.08)",
-  display: "flex",
-  flexDirection: "column",
-  gap: "20px",
-};
-
-const formGroup = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "10px",
-};
-
-const inputStyle = {
-  padding: "12px",
-  borderRadius: "8px",
-  border: "1px solid #ccc",
-  fontSize: "14px",
-  width: "100%",
-};
-
-const textareaStyle = {
-  padding: "12px",
-  borderRadius: "8px",
-  border: "1px solid #ccc",
-  fontSize: "14px",
-  resize: "vertical",
-  width: "100%",
-};
-
-const fileInputStyle = {
-  padding: "10px",
-  border: "1px solid #ccc",
-  borderRadius: "8px",
-  background: "white",
-  fontSize: "14px",
-};
-
-const radioRow = {
-  display: "flex",
   flexWrap: "wrap",
-  gap: "20px",
 };
 
-const submitBtn = {
-  marginTop: "25px",
-  padding: "14px",
-  width: "100%",
-  background: "#0b2c5f",
-  color: "white",
-  border: "none",
+const filterRow = {
+  display: "grid",
+  gridTemplateColumns: "repeat(3, 1fr)",
+  gap: "20px",
+  marginTop: "20px",
+};
+
+const input = {
+  padding: "10px",
   borderRadius: "8px",
-  cursor: "pointer",
-  fontSize: "16px",
-  fontWeight: "bold",
+  border: "1px solid #ccc",
+};
+
+const table = {
+  width: "100%",
+  marginTop: "20px",
+  borderCollapse: "collapse",
+};
+
+const thStyle = {
+  borderBottom: "2px solid #ddd",
+  padding: "12px",
+  textAlign: "left",
+  background: "#f4f6f9",
+};
+
+const tdStyle = {
+  padding: "12px",
+  borderBottom: "1px solid #eee",
+};
+
+const searchWrapper = {
+  display: "flex",
+  alignItems: "center",
+  background: "#f1f3f5",
+  borderRadius: "999px",
+  padding: "6px 12px",
+  width: "220px",
+  border: "1px solid #ddd",
+};
+
+const icon = {
+  fontSize: "12px",
+  marginRight: "6px",
+  color: "#888",
+};
+
+const searchInput = {
+  border: "none",
+  outline: "none",
+  background: "transparent",
+  fontSize: "13px",
+  width: "100%",
 };
 
 export default Dashboard;
